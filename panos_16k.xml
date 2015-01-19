@@ -1,0 +1,32 @@
+
+ <panoramas>
+  
+  <pano id="endzone_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/bsu_stadium/endzone/L_endzone_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/bsu_stadium/endzone/R_endzone_pano_16k.tif" />
+  <pano id="church_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/bsu_stadium/church/1/L_church_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/bsu_stadium/church/1/R_church_pano_16k.tif" />
+  <pano id="church_2_16k"		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/bsu_stadium/church/2/L_church_pano_2_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/bsu_stadium/church/2/R_church_pano_2_16k.tif" />
+  
+  <pano id="big_B_16k" 			name="a" left="/home/broncos/panoramas/work_caps/finished_panos/bsu_campus/big_B/L_big_B_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/bsu_campus/big_B/R_big_B_pano_16k.tif" />
+  <pano id="cherry_blossoms_16k" 	name="a" left="/home/broncos/panoramas/work_caps/finished_panos/bsu_campus/cherry_blossoms/1/L_cherry_blossoms_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/bsu_campus/cherry_blossoms/1/R_cherry_blossoms_pano_16k.tif" />
+  <pano id="cherry_blossoms_2_16k" 	name="a" left="/home/broncos/panoramas/work_caps/finished_panos/bsu_campus/cherry_blossoms/2/L_cherry_blossoms_pano_2_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/bsu_campus/cherry_blossoms/2/R_cherry_blossoms_pano_2_16k.tif" />
+  
+  <pano id="middle_of_walkways_16k" 	name="a" left="/home/broncos/panoramas/work_caps/finished_panos/old_pen/middle_of_walkways/L_middle_of_walkways_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/old_pen/middle_of_walkways/R_middle_of_walkways_pano_16k.tif" />
+  <pano id="4_house_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/old_pen/4_house/20_degree_shift/L_4_house_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/old_pen/4_house/20_degree_shift/R_4_house_pano_16k.tif" />
+  <pano id="4_house_2_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/old_pen/4_house/original/L_4_house_pano_2_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/old_pen/4_house/original/R_4_house_pano_2_16k.tif" />
+  <pano id="sally_port_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/old_pen/sally_port/L_sally_port_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/old_pen/sally_port/R_sally_port_pano_16k.tif" />
+  <pano id="gallows_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/old_pen/the_gallows/L_the_gallows_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/old_pen/the_gallows/R_the_gallows_pano_16k.tif" />
+  
+  <pano id="zion_bank_room_16k" 	name="a" left="/home/broncos/panoramas/work_caps/finished_panos/zion_bank_room/1/L_zion_bank_room_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/zion_bank_room/1/R_zion_bank_room_pano_16k.tif" />
+  <pano id="zion_bank_room_2_16k" 	name="a" left="/home/broncos/panoramas/work_caps/finished_panos/zion_bank_room/2/L_zion_bank_room_pano_2_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/zion_bank_room/2/R_zion_bank_room_pano_2_16k.tif" />
+  <pano id="zion_bank_room_3_16k" 	name="a" left="/home/broncos/panoramas/work_caps/finished_panos/zion_bank_room/3/L_zion_bank_room_pano_3_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/zion_bank_room/3/R_zion_bank_room_pano_3_16k.tif" />
+  
+  <pano id="mid_stairs_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/camels_back/mid_stairs/1/L_mid_stairs_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/camels_back/mid_stairs/1/R_mid_stairs_pano_16k.tif" />
+  <pano id="mid_stairs_2_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/camels_back/mid_stairs/2/L_mid_stairs_pano_2_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/camels_back/mid_stairs/2/R_mid_stairs_pano_2_16k.tif" />
+  <pano id="bottom_stairs_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/camels_back/bottom_stairs/1/L_bottom_stairs_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/camels_back/bottom_stairs/1/R_bottom_stairs_pano_16k.tif" />
+  <pano id="bottom_stairs_2_16k" 	name="a" left="/home/broncos/panoramas/work_caps/finished_panos/camels_back/bottom_stairs/2/L_bottom_of_stairs_pano_2_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/camels_back/bottom_stairs/2/R_bottom_of_stairs_pano_2_16k.tif" />
+  <pano id="top_of_camels_back_16k" 	name="a" left="/home/broncos/panoramas/work_caps/finished_panos/camels_back/top_camels_back/L_top_of_camels_back_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/camels_back/top_camels_back/R_top_of_camels_back_pano_16k.tif" />
+  
+  <pano id="sc_front_yard_16k" 		name="a" left="/home/broncos/panoramas/work_caps/finished_panos/sc_front_yard/L_sc_front_yard_pano_16k.tif" right="/home/broncos/panoramas/work_caps/finished_panos/sc_front_yard/R_sc_front_yard_pano_16k.tif" />
+  <pano id="ys_lake_16k"		name="a" left="/home/broncos/scratch/scutchin/lake/left_16k.jpg" right="/home/broncos/scratch/scutchin/lake/right_16k.jpg" />
+  <pano id="ys_stairs_16k"		name="a" left="/home/broncos/panoramas/work_caps/test/test_panos/panos/L_test_pano.tif" right="/home/broncos/panoramas/work_caps/test/test_panos/panos/R_test_pano.tif" />
+  
+ </panoramas>

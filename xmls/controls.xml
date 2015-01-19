@@ -1,0 +1,48 @@
+ 
+ <control_scheme>
+   
+   
+   <!-- Viewing Controls -->
+   <control id="rotate_up"	keyvalue="w" />
+   <control id="rotate_down"	keyvalue="s" />
+   <control id="rotate_left"	keyvalue="a" />
+   <control id="rotate_right"	keyvalue="d" />
+   
+   <control id="move_forward"	keyvalue="L" />
+   <control id="move_backward"	keyvalue="l" />
+   <control id="move_left"	keyvalue="K" />
+   <control id="move_right"	keyvalue="k" />
+   
+   <control id="zoom_in"	keyvalue="q" />
+   <control id="zoom_out"	keyvalue="z" />
+   <control id="eye_distance_increase"	keyvalue="1" />
+   <control id="eye_distance_decrease"	keyvalue="2" />
+   <control id="FOV_increase"	keyvalue="[" />
+   <control id="FOV_decrease"	keyvalue="]" />
+   <control id="reset_values"	keyvalue="e" />
+   
+   
+   
+   <!-- Stereo Controls -->
+   <control id="swap_eyes"				keyvalue="t" />
+   <control id="left_sphere_rotation_increase"		keyvalue="p" />
+   <control id="left_sphere_rotation_decrease"		keyvalue="P" />
+   <control id="left_sphere_rotation_display_toggle"	keyvalue="G" />
+   <control id="left_sphere_rotation_save_value"	keyvalue="g" />
+   
+   <control id="stereo_pano_toggle"		keyvalue="3" />
+   <control id="stereo_left_right_split"	keyvalue="v" />
+   <control id="stereo_top_bottom_split"	keyvalue="h" />
+   <control id="stereo_anaglyphic_split"	keyvalue="b" />
+   
+
+   <!-- Menu Controls -->
+   <control id="menu_toggle"		keyvalue="m" />
+   
+   
+   <!-- Debug Controls -->
+   <control id="ref_grid_toggle"	keyvalue="R" />
+   <control id="RAM_display_toggle"	keyvalue="I" />
+   
+ 
+ </control_scheme>

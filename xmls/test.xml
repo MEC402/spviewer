@@ -1,0 +1,10 @@
+ 
+ <cab>
+   
+   <control id="rotate_up"    keyvalue="w" />
+   <control id="rotate_down"  keyvalue="s" />
+   <control id="rotate_left"  keyvalue="a" />
+   <control id="rotate_right" keyvalue="d" />
+ 
+ </cab>
+   

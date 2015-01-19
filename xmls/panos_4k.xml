@@ -1,0 +1,22 @@
+<!--BlueCro$$6319-->
+ <panoramas>
+   
+   <pano id="stadium_church"	name="Albertson's Stadium Mid-Level" left="/home/broncos/panoramas/refsets/church/L_church_pano_4k.png" right="/home/broncos/panoramas/refsets/church/R_church_pano_4k.png" quat="0,0,0,01" horizontal="0" vertical="0.0"/>
+   <pano id="stadium_endzone"	name="Albertson's Stadium North Endzone" left="/home/broncos/panoramas/refsets/endzone/L_endzone_pano_4k.png" right="/home/broncos/panoramas/refsets/endzone/R_endzone_pano_4k.png" quat="0,0,0,01"  horizontal="0" vertical="0.0" />
+   <pano id="stadium_topstairs"	name="Albertson's Stadium Top of Stairs" left="/home/broncos/panoramas/refsets/top_of_stairs/L_top_of_stairs_pano_4k.png" right="/home/broncos/panoramas/refsets/top_of_stairs/R_top_of_stairs_pano_4k.png" quat="0,0,0,01"  horizontal="0" vertical="0.0" />
+   
+ <!--  <pano id="bsu_bigb"  	 name="Boise State 'B' Statue" left="/home/broncos/panoramas/refsets/big_B/L_big_B_pano_4k.png" right="/home/broncos/panoramas/refsets/big_B/R_big_B_pano_4k.png" horizontal="-2.3" vertical="0.0" quat="0,0,0,0," />
+   <pano id="bsu_cherryblossoms" name="Boise State Cherry Blossoms" left="/home/broncos/panoramas/refsets/cherry_blossoms/L_cherry_blossoms_pano_4k.png" right="/home/broncos/panoramas/refsets/cherry_blossoms/R_cherry_blossoms_pano_4k.png"  quat="0,0,0,0," horizontal="0" vertical="0.0"/>
+
+
+   <pano id="scfrontyard"	name="SC Front Yard" left="/home/broncos/panoramas/refsets/sc_front_yard/L_sc_front_yard_pano_4k.png" right="/home/broncos/panoramas/refsets/sc_front_yard/R_sc_front_yard_pano_4k.png" quat="0,0,0,0,"  horizontal="0" vertical="0.0"/>
+
+
+   <pano id="cb_bottomstairs"	name="Bottom of Camel's Back Stairs" left="/home/broncos/panoramas/refsets/bottom_stairs/L_bottom_stairs_pano_4k.png" right="/home/broncos/panoramas/refsets/bottom_stairs/R_botttom_stairs_pano_4k.png" quat="0,0,0,0,"  horizontal="0" vertical="0.0"/>
+   <pano id="cb_midstairs"	name="Middle of Camel's Back Stairs" left="/home/broncos/panoramas/refsets/mid_stairs/L_mid_stairs_pano_4k.png" right="/home/broncos/panoramas/refsets/mid_stairs/R_mid_stairs_pano_4k.png" quat="0,0,0,0,"  horizontal="0" vertical="0.0"/>
+   <pano id="cb_top"		name="Top of Camel's Back" left="/home/broncos/panoramas/refsets/top_camels_back/L_top_camels_back_pano_4k.png" right="/home/broncos/panoramas/refsets/top_camels_back/R_top_camels_back_pano_4k.png" quat="0,0,0,0,"  horizontal="0" vertical="0.0"/>
+   
+   <pano id="ys_lake"		name="Yellowstone Lake" left="/home/broncos/scratch/scutchin/lake/left_16k.jpg" right="/home/broncos/scratch/scutchin/lake/right_16k.jpg"  quat="0,0,0,0,"  horizontal="0" vertical="0.0"/>
+   <pano id="ys_lake"		name="Yellowstone Lake" left="/home/broncos/scratch/jstohler/left_lake_yellowstone_4k.jpg" right="/home/broncos/scratch/jstohler/right_lake_yellowstone_4k.jpg" /> -->-->
+   
+ </panoramas>
