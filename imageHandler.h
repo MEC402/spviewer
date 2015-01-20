@@ -44,7 +44,7 @@ private:
     int hor, ver;
     double tangent;
     float zupdate, xupdate;
-    double prevang,angle, verang, preverang;
+    double prevang,aspect, verang, preverang;
     double degree,degreeVer,x,y,z, t, fovy;
     osg::Group* rotate;
     osg::Switch* panos;

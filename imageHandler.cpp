@@ -171,7 +171,7 @@ imageHandler::imageHandler(std::string d,osgViewer::Viewer *av, osgGA::CameraMan
     col=_col;
     degreeVer=0;
     degree=0.0;
-    angle=1.6875;
+    aspect=1.6875;
     root=_root;
     ref=false;
     t=0.0025;
@@ -373,32 +373,32 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 	    
 	    case 'q':
 		if(fovy>0)
-		fovy-=5;
+		fovy-=1;
 		
-		myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, angle, 1.0f,10000.0f);
+		myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
 		return true;
 		break;
 		
 	    case '[':
-		angle+=0.1;
+		aspect+=0.1;
 
-		myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, angle, 1.0f,10000.0f);
+		myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
 		return true;
 		break;
 		
 	    case ']':
-		if(angle>0.1)
-		angle-=0.1;
+		if(aspect>0.1)
+		aspect-=0.1;
 		
-		myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, angle, 1.0f,10000.0f);
+		myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
 		return true;
 		break;
 		
 	    case 'z':
 		if(fovy<180)
-		fovy+=5;
+		fovy+=1;
 
-		myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, angle, 1.0f,10000.0f);
+		myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
 		return true;
 		break;
 		 
@@ -469,9 +469,9 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 	    case 'e':
 	    
 	      //reset the zoom
-		  angle=1.6875;
+		  aspect=1.6875;
 		  fovy=90.0;
-		  myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, angle, 1.0f,10000.0f);
+		  myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
 		//reset the camera position view
 		 hor = -1;
 		 ver=0;
