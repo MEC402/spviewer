@@ -23,8 +23,8 @@ public:
 
   void parsePanoramas();
     void parsePanoramas(const xmlpp::Node* node);
-void setRotate(std::string D, std::string myid,std::string degree, std::string degreeVer);
-void setRotate(xmlpp::Document * d,const xmlpp::Node* node,std::string myid,std::string degree, std::string degreeVer);
+void writeToFile(std::string D, std::string myid,std::string degree, std::string degreeVer);
+void writeToFile(xmlpp::Document * d,const xmlpp::Node* node,std::string myid,std::string degree, std::string degreeVer);
   
 
   Controls getControls(){ return controlVec; };

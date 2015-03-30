@@ -1,9 +1,10 @@
-
+#include <sys/types.h>
+#include <dirent.h>
+#include <errno.h>
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
 #include "XmlReader.h"
-
 #include <stdio.h>
 std::vector<double> XmlReader::rotatedLeftSphere;
 std::vector<double> XmlReader::verticalRotation;
@@ -328,6 +329,24 @@ void XmlReader::parseControls(const xmlpp::Node* pnode){
   
 }
 
+int getdir (std::string dir, std::vector<std::string> &files)
+{
+    DIR *dp;
+    struct dirent *dirp;
+    if((dp  = opendir(dir.c_str())) == NULL) {
+        std::cout << "Error(" << errno << ") opening " << dir << std::endl;
+        return errno;
+    }
+    std::string filename;
+    while ((dirp = readdir(dp)) != NULL) {
+	filename= std::string(dirp->d_name);
+	if(filename.compare(".")!=0 && filename.compare("..")!=0  )
+        files.push_back(std::string(dirp->d_name));
+    }
+    closedir(dp);
+    return 0;
+}
+
 void XmlReader::parsePanoramas(const xmlpp::Node* pnode){
   
   // Get Current Node's Content
@@ -347,8 +366,8 @@ void XmlReader::parsePanoramas(const xmlpp::Node* pnode){
       // Panorama Variables
       std::string id = "";
       std::string name = "";
-      std::string left_dir = "";
-      std::string right_dir = "";
+     
+      std::string dir = "";
       std::string rotate="";
       std::string vertical="";
       std::string quat="";
@@ -363,39 +382,33 @@ void XmlReader::parsePanoramas(const xmlpp::Node* pnode){
 	if(attribute->get_name().compare("id") == 0){
 	  id = attribute->get_value();
 	  Ids.push_back(id);
-	// Else: Get Pano Name
-	} else if(attribute->get_name().compare("name") == 0){
-	  name = attribute->get_value();
 	
-	// Else: Get Left Pano Directory
-	} else if(attribute->get_name().compare("left") == 0){
-	  left_dir = attribute->get_value();
-	
-	// Else: Get Right Pano Directory
-	} else if(attribute->get_name().compare("right") == 0){
-	  right_dir = attribute->get_value();
 	}
-	//TODO 11/2
-	else if (attribute->get_name().compare("horizontal")==0)
-  	  rotate = attribute->get_value();
+	// Else: Get Pano Name
+	else if(attribute->get_name().compare("name") == 0)
+	  name = attribute->get_value();
+	// Else: get the Directory
+	 else if(attribute->get_name().compare("dir") == 0)
+	  dir = attribute->get_value();
 	else if (attribute->get_name().compare("quat")==0)
   	  quat = attribute->get_value();
-	else if (attribute->get_name().compare("vertical")==0){
-  	  vertical = attribute->get_value();
-	 
-	  
-	}
+	
+	
       }
       
       
-      
+      //add '/' to the end of Directory name 
+      if(dir.back() !='/')
+	dir+='/';
       // If the Values aren't empty, add to Vector
-      if(id.compare("") != 0 && name.compare("") != 0 && left_dir.compare("") != 0 && right_dir.compare("") != 0){
+      if(id.compare("") != 0 && name.compare("") != 0 && dir.compare("") != 0){
 	
 	//TODO
+	std::vector<std::string> files;
+	getdir(dir, files);
 	std::cout << "Loading Panorama Data/Images: \"" << id << "\"" << std::endl;
 	
-	Panorama* temp = new Panorama(id, name, left_dir, right_dir);
+	Panorama* temp = new Panorama(id, name, dir+files[0], dir+files[1]);
 	
 	panoVec.push_back(temp);
       }
@@ -476,8 +489,8 @@ void XmlReader::parsePanoramas(){
       // Panorama Variables
       std::string id = "";
       std::string name = "";
-      std::string left_dir = "";
-      std::string right_dir = "";
+     
+      std::string dir = "";
       std::string rotate="";
       std::string vertical="";
 
@@ -497,17 +510,12 @@ void XmlReader::parsePanoramas(){
 	} else if(attribute->get_name().compare("name") == 0){
 	  name = attribute->get_value();
 	
-	// Else: Get Left Pano Directory
-	} else if(attribute->get_name().compare("left") == 0){
-	  left_dir = attribute->get_value();
-	
-	// Else: Get Right Pano Directory
-	} else if(attribute->get_name().compare("right") == 0){
-	  right_dir = attribute->get_value();
+
+	// Else: Get  Pano Directory
+	} else if(attribute->get_name().compare("dir") == 0){
+	  dir = attribute->get_value();
 	}
-	//TODO 11/2
-	else if (attribute->get_name().compare("horizontal")==0)
-  	  rotate = attribute->get_value();
+
 	else if (attribute->get_name().compare("vertical")==0){
   	  vertical = attribute->get_value();
 	 
@@ -518,14 +526,17 @@ void XmlReader::parsePanoramas(){
       }
       
       
-      
+      if(dir.back() !='/')
+	dir+='/';
       // If the Values aren't empty, add to Vector
-      if(id.compare("") != 0 && name.compare("") != 0 && left_dir.compare("") != 0 && right_dir.compare("") != 0){
+      if(id.compare("") != 0 && name.compare("") != 0 && dir.compare("") != 0 ){
 	
 	//TODO
+	std::vector<std::string> files;
+	getdir(dir, files);
 	std::cout << "Loading Panorama Data/Images: \"" << id << "\"" << std::endl;
 	
-	Panorama* temp = new Panorama(id, name, left_dir, right_dir);
+	Panorama* temp = new Panorama(id, name, files[0], files[1]);
 	
 	panoVec.push_back(temp);
       }
@@ -564,7 +575,7 @@ void XmlReader::parsePanoramas(){
 
 
 
-void XmlReader::setRotate(xmlpp::Document * d,const xmlpp::Node* pnode,std::string myid,std::string degree, std::string degreeVer){
+void XmlReader::writeToFile(xmlpp::Document * d,const xmlpp::Node* pnode,std::string myid,std::string degree, std::string degreeVer){
   
 //   // Get Current Node's Content
 //   const xmlpp::ContentNode* nodeContent = dynamic_cast<const xmlpp::ContentNode*>(pnode);
@@ -629,7 +640,7 @@ void XmlReader::setRotate(xmlpp::Document * d,const xmlpp::Node* pnode,std::stri
 
 
 
-void XmlReader::setRotate(std::string d1,std::string myid,std::string degree, std::string degreeVer){
+void XmlReader::writeToFile(std::string d1,std::string myid,std::string degree, std::string degreeVer){
      xmlpp::DomParser parser;
     parser.parse_file(d1);    
     xmlpp::Node* node  = parser.get_document()->get_root_node();
@@ -657,18 +668,12 @@ void XmlReader::setRotate(std::string d1,std::string myid,std::string degree, st
 
       for(xmlpp::Element::AttributeList::const_iterator iter = attributes.begin(); iter != attributes.end(); ++iter) {
 	 xmlpp::Attribute* attribute = *iter;	
-	if(attribute->get_name().compare("horizontal") == 0){
-	   Glib::ustring cd=  Glib::ustring(std::to_string(rotatedLeftSphere[i]).c_str());
-	  attribute->set_value(cd);
-	   attribute = *(++iter);
-	    
-		  if(attribute->get_name().compare("vertical") == 0){
-		    cd=  Glib::ustring(std::to_string(verticalRotation[i]).c_str());
-		    attribute->set_value(cd);  
-		    i++;
+	 if(attribute->get_name().compare("quat") == 0){
+		      Glib::ustring cd=  Glib::ustring((std::to_string(myQuat[i].x())+";"+std::to_string(myQuat[i].y())+";"+std::to_string(myQuat[i].z())+";"+std::to_string(myQuat[i].w())).c_str());
+		      attribute->set_value(cd);     
 
-		  }
-	}
+
+		    }
       }
       
     
@@ -697,16 +702,7 @@ void XmlReader::setRotate(std::string d1,std::string myid,std::string degree, st
 	  const xmlpp::Element::AttributeList& attributes = nodeElement->get_attributes();
 	  for(xmlpp::Element::AttributeList::const_iterator  iter1= attributes.begin(); iter1 != attributes.end(); ++iter1) {
 		  xmlpp::Attribute* attribute1 = *iter1;	     
-		  if(attribute1->get_name().compare("horizontal") == 0){
-		      Glib::ustring cd=  Glib::ustring(std::to_string(rotatedLeftSphere[i]).c_str());
-		      attribute1->set_value(cd);}
-
-		    if(attribute1->get_name().compare("vertical") == 0){
-		      Glib::ustring cd=  Glib::ustring(std::to_string(verticalRotation[i]).c_str());
-		      attribute1->set_value(cd);     
-
-
-		    }
+		  
 		     if(attribute1->get_name().compare("quat") == 0){
 		      Glib::ustring cd=  Glib::ustring((std::to_string(myQuat[i].x())+";"+std::to_string(myQuat[i].y())+";"+std::to_string(myQuat[i].z())+";"+std::to_string(myQuat[i].w())).c_str());
 		      attribute1->set_value(cd);     
