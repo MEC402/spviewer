@@ -141,9 +141,13 @@ void imageHandler::rotateCamera(char direction){
       break;
   }
    avec = new osg::Vec3(0,10,0.0);
-   rotated = q * *avec+ osg::Vec3d(a,b,c);
-   myAxis =q * osg::Vec3d(10,0.0,0.0) ;   
-   cm->setHomePosition(osg::Vec3d(a, b, c), rotated, osg::Vec3d(0, 0, -1),false);
+    rotated = q * *avec+ osg::Vec3d(a,b,c);
+    myAxis =q * osg::Vec3d(10,0.0,0.0) ;
+   
+   
+   
+//     camera->setViewMatrixAsLookAt(osg::Vec3d(a, b, c),rotated, osg::Vec3d(0, 0, -1));
+    cm->setHomePosition(osg::Vec3d(a, b, c), rotated, osg::Vec3d(0, 0, -1),false);
    myviewer->home();
 }
 
@@ -199,15 +203,16 @@ imageHandler::imageHandler(std::string d,osgViewer::Viewer *av, osgGA::CameraMan
     camera->setClearMask( GL_DEPTH_BUFFER_BIT );
     camera->setRenderOrder( osg::Camera::POST_RENDER);
     camera->setAllowEventFocus( false );
+   // camera->setProjectionMatrix(osg::Matrix::ortho2D(0, 1204, 0, 768) );
     camera->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF );
 
-    camera->setViewMatrixAsLookAt(osg::Vec3d(a, b, c),rotated, osg::Vec3d(0, 0, -1));
+     camera->setViewMatrixAsLookAt(osg::Vec3d(a, b, c),rotated, osg::Vec3d(0, 0, -1));
 
    
-    osg::ref_ptr<osg::Geode> textGeode = new osg::Geode;
-    textGeode->addDrawable(text);
-    camera->addChild(textGeode.get());   
-    root->addChild(camera);
+     osg::ref_ptr<osg::Geode> textGeode = new osg::Geode;
+     textGeode->addDrawable(text);
+     camera->addChild(textGeode.get());   
+     root->addChild(camera);
     
     pat= new osg::PositionAttitudeTransform;
     refSphere= new osg::ref_ptr<osg::PositionAttitudeTransform>[(12)*(12)] ;
@@ -232,7 +237,6 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
      case osgGA::GUIEventAdapter::KEYDOWN:
 	  switch(ea.getKey())
  	  {
-	    
 	    case 'l':
 		 a=a+50;
 		  x=rotated.x()+50;
@@ -242,7 +246,6 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		 cm->setHomePosition(osg::Vec3(a,b,c),rotated,osg::Vec3(0.0f,0.0f,-1.0f),false);
 		 myviewer->home();
 		 break;
-		 
 	    case 'L':
 		  a=a-50;
 		  x=rotated.x()-50;
@@ -252,7 +255,6 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		  cm->setHomePosition(osg::Vec3(a,b,c),rotated,osg::Vec3(0.0f,0.0f,-1.0f),false);
 		  myviewer->home();
 		  break;
-		  
 	    case 'k':
 		 b=b+50;
 		 x=rotated.x();
@@ -262,7 +264,6 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		 cm->setHomePosition(osg::Vec3(a,b,c),rotated,osg::Vec3(0.0f,0.0f,-1.0f),false);
 		 myviewer->home();
 		 break;
-		 
 	    case 'K':
 		  b=b-1500;
 		  x=rotated.x();
@@ -273,7 +274,6 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		  myviewer->home();
 		  break;
 	
-            //toggle the two pictures
 	    case 't':
 		if(myviewer->getCamera()->getCullMaskLeft()==0x01){
 		  myviewer->getCamera()->setCullMaskLeft(0x00000002);
@@ -284,33 +284,32 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		  myviewer->getCamera()->setCullMaskRight(0x00000002);}
 		return true;
 		break;
-		
-	    //rotate left sphere vertically
 	    case 'p':
+		//degree=degree-t;
 		myindex=getIndex();
 		rotatedLeftSphere[myindex]-=t;
 		degree=rotatedLeftSphere[myindex];
-		rotate= (osg::Group*)panos->getChild(myindex);
 
 		
 		    for (int i=0;i<(*row)*(*col); i++)
-		    {			
+		    {
 			pat=(osg::PositionAttitudeTransform*)rotate->getChild(i);
 			osg::Quat x=pat->getAttitude();		
 			x=x*osg::Quat(-t, osg::Vec3d(0.0f,0.0f,1.0f));
 			pat->setAttitude(x);
+			
 		    }
  		
 		  myQuat[myindex]=pat->getAttitude();
 		  return true;
 		  break;
 
-	    //rotate left sphere vertically
+	
 	    case 'P':
+		 //degree=degree+t;
 		 myindex=getIndex();
 		 rotatedLeftSphere[myindex]+=t;
 		 degree=rotatedLeftSphere[myindex];
-		 rotate= (osg::Group*)panos->getChild(myindex);
 
 		    for (int i=0;i<(*row)*(*col); i++)
 		    {
@@ -322,23 +321,18 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 
 		  return true;
 		  break;
-		  
-	    //load the next image
 	    case 'n':
     
 		  ai->loadNextImage();
 		  myindex=getIndex();
-		 // rotate= (osg::Group*)panos->getChild(myindex);
+		  rotate= (osg::Group*)panos->getChild(myindex);
 	          return true;
 		  break;
-	    //load the previous image
-	    case 'N':
+	      case 'N':
 		  ai->loadPrevImage();
-  		  myindex=getIndex();
 	          return true;
 		  break;
 	    
- 	    //rotate left sphere horizontally
 	    case 'o':
 		// degreeVer=degreeVer+t;
 		 myindex=getIndex();
@@ -358,8 +352,6 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		  
 		 return true;
 		 break;
-		 
- 	    //rotate left sphere horizontally
 	    case 'O':
 		myindex=getIndex();
 		verticalRotation[myindex]+=t;
@@ -378,7 +370,7 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		  return true;
 		  break;
 	    
-	    //increase field of view
+	    
 	    case 'q':
 		if(fovy>0)
 		fovy-=1;
@@ -410,8 +402,10 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		return true;
 		break;
 		 
-	    //load the reference grids
+      
 	    case 'R':
+		  
+	      
 		    for(int i=0;i<(12);i++)
 		      for(int j=0;j<(12);j++){
 		  
@@ -426,7 +420,7 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		  
 		    break;
 	    
-	    //print out the degree of rotation
+	    
 	     case 'g':
 		     s.str("");
 		     s<<"Degree of left sphere's rotation: \n"<<degree<<" "<<degreeVer;
@@ -439,11 +433,12 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		      myfile.close();
 		    break;
 	    
-	    //save the degree of rotation to file
 	    case 'G':
 		     s.str("");
 		     text->setText(s.str());
-		     writeToFile(filename, Ids[myindex], std::to_string( degree ), std::to_string( degreeVer ));
+		      //write back to file
+		     // std::cout<<Ids[myindex]<<std::endl;
+		     setRotate(filename, Ids[myindex], std::to_string( degree ), std::to_string( degreeVer ));
 		    break;
 		 
 	    case 'y':
@@ -464,6 +459,7 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		rotateCamera('d');
 		break;
 	     case 'a':
+		
 		rotateCamera('l');
 		break;
 	    case 'd':
@@ -505,7 +501,7 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 
 		}
 		break;
-	    //increase eye Separation
+	   
 	    case '1':
 	  
 		if (osg::DisplaySettings::instance()->getStereo()){
@@ -514,8 +510,8 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 	
 		break;
 	      
-	      //decrease eye Separation
-	      case '2':		
+	      case '2':
+		
 		if (osg::DisplaySettings::instance()->getStereo()){
 		  eyeDistance -= 0.001;
 		  osg::DisplaySettings::instance()->setEyeSeparation(eyeDistance);
@@ -524,7 +520,6 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		
 		break;
 	      
-	      //set/unset stereo 
 	      case '3':
 		
 		if (osg::DisplaySettings::instance()->getStereo()){
@@ -535,7 +530,6 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		
 		break;
 	      
-	      //set vertical split
 	      case 'v':
 		
 		if (osg::DisplaySettings::instance()->getStereo()){
@@ -544,7 +538,7 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 		}
 	
 		break;
-	     	//set horizonal split 
+	      
 	      case 'h':
 		
 		if (osg::DisplaySettings::instance()->getStereo()){
@@ -553,7 +547,6 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 
 		break;
 	      
-		//set ANAGLYPHIC mode
 	      case 'b':
 		
 		if (osg::DisplaySettings::instance()->getStereo()){
@@ -562,14 +555,7 @@ bool imageHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 
 		break;
 	      
-// 	      case 'A':
-// 		if (osg::DisplaySettings::instance()->getStereo()){
-// 		  osg::DisplaySettings::instance()->setStereo(false);
-// 		  viewer->getCamera()->setCullMask(0x01);
-// 		} else {
-// 		  osg::DisplaySettings::instance()->setStereo(true);
-// 		  viewer->getCamera()->setCullMask(0xffffffff);
-// 		} 
+		 
 	     case 'I':
     
 		//double vm, rss;
