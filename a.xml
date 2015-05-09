@@ -1,8 +1,8 @@
 <panoramas>
    
-   <pano id="stadium_church" name="Albertson's Stadium Mid-Level" left="/home/broncos/panoramas/refsets/church/L_church_pano_4k.png" right="/home/broncos/panoramas/refsets/church/R_church_pano_4k.png" quat="0.000000;0.000000;0.000000;1.000000" />
-   <pano id="stadium_endzone" name="Albertson's Stadium North Endzone" left="/home/broncos/panoramas/refsets/endzone/L_endzone_pano_4k.png" right="/home/broncos/panoramas/refsets/endzone/R_endzone_pano_4k.png" quat="0.000000;0.000000;-0.032494;0.999472"/>
-   <pano id="stadium_topstairs" name="Albertson's Stadium Top of Stairs" left="/home/broncos/panoramas/refsets/top_of_stairs/L_top_of_stairs_pano_4k.png" right="/home/broncos/panoramas/refsets/top_of_stairs/R_top_of_stairs_pano_4k.png" quat="0.000000;0.000000;0.000000;1.000000" />
+   <pano id="stadium_church" name="Albertson's Stadium Mid-Level" dir="/home/atran/a/spviewer-master/pics/pic1"  quat="0.000000;0.000000;0.000000;1.000000" />
+   <pano id="stadium_endzone" name="Albertson's Stadium North Endzone" dir="/home/atran/a/spviewer-master/pics/pic2/" quat="0.000000;0.000000;-0.032494;0.999472"/>
+   <pano id="stadium_topstairs" name="Albertson's Stadium Top of Stairs" dir="/home/atran/a/spviewer-master/pics/pic3/" quat="0.000000;0.000000;0.000000;1.000000" />
    
  <!--  <pano id="bsu_bigb"  	 name="Boise State 'B' Statue" left="/home/broncos/panoramas/refsets/big_B/L_big_B_pano_4k.png" right="/home/broncos/panoramas/refsets/big_B/R_big_B_pano_4k.png" horizontal="-2.3" vertical="0.0" quat="0;0;0;0;" />
    <pano id="bsu_cherryblossoms" name="Boise State Cherry Blossoms" left="/home/broncos/panoramas/refsets/cherry_blossoms/L_cherry_blossoms_pano_4k.png" right="/home/broncos/panoramas/refsets/cherry_blossoms/R_cherry_blossoms_pano_4k.png"  quat="0;0;0;0;" horizontal="0" vertical="0.0"/>
