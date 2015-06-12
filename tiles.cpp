@@ -58,7 +58,11 @@ void Tiles::createTiles(){
   
   // Read in a reference to the image
   osg::ref_ptr<osg::Image> image = osgDB::readRefImageFile(imageFileName);  
-  
+  if (image == NULL)
+  {
+    std::cerr << "Could not load image file!" << std::endl;
+    return;
+  } 
   
   // Scale original image if requested
   if(scaleFlag){

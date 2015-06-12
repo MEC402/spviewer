@@ -1,7 +1,7 @@
 
 #include <iostream>
+#include <string>
 #include <stdlib.h>
-#include <string.h>
 #include "XmlReader.h"
 
 #include <stdio.h>
@@ -13,6 +13,13 @@ std::vector<std::string> XmlReader::Ids;
 std::vector<Panorama*> XmlReader::panoVec;
 const xmlpp::Node* XmlReader::node;
 
+
+std::string toString(float f)
+{
+  char ar[10];
+  sprintf(ar,"%f",f);
+  return std::string(ar);
+}
 
 ////////////////////////////////////////
 // XmlReader Constructor / Destructor //
@@ -54,13 +61,14 @@ void XmlReader::debug(){
   
   
   // Get Node Name
-  const Glib::ustring nodename = node->get_name();
+  const std::string nodename = node->get_name();
+//  const std::string nodename = node->get_name();
 
   
   // Let's not say "name: text".
   if(!nodeText && !nodeComment && !nodename.empty()){
     
-    const Glib::ustring namespace_prefix = node->get_namespace_prefix();
+    const std::string namespace_prefix = node->get_namespace_prefix();
 
     std::cout << "Node name = ";
     
@@ -99,7 +107,7 @@ void XmlReader::debug(){
     for(xmlpp::Element::AttributeList::const_iterator iter = attributes.begin(); iter != attributes.end(); ++iter) {
       
       const xmlpp::Attribute* attribute = *iter;
-      const Glib::ustring namespace_prefix = attribute->get_namespace_prefix();
+      const std::string namespace_prefix = attribute->get_namespace_prefix();
 
       std::cout << "  Attribute ";
       
@@ -146,13 +154,13 @@ void XmlReader::debug(const xmlpp::Node* pnode){
   
   
   // Get Node Name
-  const Glib::ustring nodename = pnode->get_name();
+  const std::string nodename = pnode->get_name();
 
   
   // Let's not say "name: text".
   if(!nodeText && !nodeComment && !nodename.empty()){
     
-    const Glib::ustring namespace_prefix = pnode->get_namespace_prefix();
+    const std::string namespace_prefix = pnode->get_namespace_prefix();
 
     std::cout << "Node name = ";
     
@@ -191,7 +199,7 @@ void XmlReader::debug(const xmlpp::Node* pnode){
     for(xmlpp::Element::AttributeList::const_iterator iter = attributes.begin(); iter != attributes.end(); ++iter) {
       
       const xmlpp::Attribute* attribute = *iter;
-      const Glib::ustring namespace_prefix = attribute->get_namespace_prefix();
+      const std::string namespace_prefix = attribute->get_namespace_prefix();
 
       std::cout << "  Attribute ";
       
@@ -226,7 +234,7 @@ void XmlReader::parseControls(){
   const xmlpp::ContentNode* nodeContent = dynamic_cast<const xmlpp::ContentNode*>(node);
   
   // Get Node Name
-  const Glib::ustring nodename = node->get_name();
+  const std::string nodename = node->get_name();
   
 
   // If the current Node is "control".
@@ -285,7 +293,7 @@ void XmlReader::parseControls(const xmlpp::Node* pnode){
   const xmlpp::ContentNode* nodeContent = dynamic_cast<const xmlpp::ContentNode*>(pnode);
   
   // Get Node Name
-  const Glib::ustring nodename = pnode->get_name();
+  const std::string nodename = pnode->get_name();
   
 
   // If the current Node is "control".
@@ -334,7 +342,7 @@ void XmlReader::parsePanoramas(const xmlpp::Node* pnode){
   const xmlpp::ContentNode* nodeContent = dynamic_cast<const xmlpp::ContentNode*>(pnode);
   
   // Get Node Name
-  const Glib::ustring nodename = pnode->get_name();
+  const std::string nodename = pnode->get_name();
   
 
   // If the current Node is "pano"
@@ -463,7 +471,7 @@ void XmlReader::parsePanoramas(){
   const xmlpp::ContentNode* nodeContent = dynamic_cast<const xmlpp::ContentNode*>(node);
   
   // Get Node Name
-  const Glib::ustring nodename = node->get_name();
+  const std::string nodename = node->get_name();
   
 
   // If the current Node is "pano"
@@ -570,7 +578,7 @@ void XmlReader::writeToFile(xmlpp::Document * d,const xmlpp::Node* pnode,std::st
 //   const xmlpp::ContentNode* nodeContent = dynamic_cast<const xmlpp::ContentNode*>(pnode);
 //   
 //   // Get Node Name
-//   const Glib::ustring nodename = pnode->get_name();
+//   const std::string nodename = pnode->get_name();
 //   
 // 
 //   // If the current Node is "pano"
@@ -603,12 +611,12 @@ void XmlReader::writeToFile(xmlpp::Document * d,const xmlpp::Node* pnode,std::st
 // 	    iter ++;
 // 	    attribute = *iter;
 // 	      if(attribute->get_name().compare("horizontal") == 0){
-// 		  Glib::ustring cd=  Glib::ustring(degree.c_str());
+// 		  std::string cd=  std::string(degree.c_str());
 // 		  attribute->set_value(cd);
 // 	  	  attribute = *(++iter);
 // 
 // 		  if(attribute->get_name().compare("vertical") == 0){
-// 		    cd=  Glib::ustring(degreeVer.c_str());
+// 		    cd=  std::string(degreeVer.c_str());
 // 		    attribute->set_value(cd);
 // 
 // 		    return;
@@ -639,7 +647,7 @@ void XmlReader::writeToFile(std::string d1,std::string myid,std::string degree, 
   
 
   // Get Node Name 
-  const Glib::ustring nodename = node->get_name();
+  const std::string nodename = node->get_name();
   int i=0;
 
   
@@ -658,12 +666,13 @@ void XmlReader::writeToFile(std::string d1,std::string myid,std::string degree, 
       for(xmlpp::Element::AttributeList::const_iterator iter = attributes.begin(); iter != attributes.end(); ++iter) {
 	 xmlpp::Attribute* attribute = *iter;	
 	if(attribute->get_name().compare("horizontal") == 0){
-	   Glib::ustring cd=  Glib::ustring(std::to_string(rotatedLeftSphere[i]).c_str());
+//	   std::string cd=  std::string(toString(rotatedLeftSphere[i]).c_str());
+	   std::string cd=  std::string(toString(rotatedLeftSphere[i])).c_str();
 	  attribute->set_value(cd);
 	   attribute = *(++iter);
 	    
 		  if(attribute->get_name().compare("vertical") == 0){
-		    cd=  Glib::ustring(std::to_string(verticalRotation[i]).c_str());
+		    cd=  std::string(toString(verticalRotation[i]).c_str());
 		    attribute->set_value(cd);  
 		    i++;
 
@@ -684,7 +693,7 @@ void XmlReader::writeToFile(std::string d1,std::string myid,std::string degree, 
     for(xmlpp::Node::NodeList::iterator iter = list.begin(); iter != list.end(); ++iter){
       
        const xmlpp::ContentNode* nodeContent1 = dynamic_cast<const xmlpp::ContentNode*>((*iter));
-       const Glib::ustring nodename1 = (*iter)->get_name();
+       const std::string nodename1 = (*iter)->get_name();
       
       // If the current Node is "pano"
       if(nodename1.compare("pano") == 0){
@@ -698,17 +707,17 @@ void XmlReader::writeToFile(std::string d1,std::string myid,std::string degree, 
 	  for(xmlpp::Element::AttributeList::const_iterator  iter1= attributes.begin(); iter1 != attributes.end(); ++iter1) {
 		  xmlpp::Attribute* attribute1 = *iter1;	     
 		  if(attribute1->get_name().compare("horizontal") == 0){
-		      Glib::ustring cd=  Glib::ustring(std::to_string(rotatedLeftSphere[i]).c_str());
+		      std::string cd=  std::string(toString(rotatedLeftSphere[i]).c_str());
 		      attribute1->set_value(cd);}
 
 		    if(attribute1->get_name().compare("vertical") == 0){
-		      Glib::ustring cd=  Glib::ustring(std::to_string(verticalRotation[i]).c_str());
+		      std::string cd=  std::string(toString(verticalRotation[i]).c_str());
 		      attribute1->set_value(cd);     
 
 
 		    }
 		     if(attribute1->get_name().compare("quat") == 0){
-		      Glib::ustring cd=  Glib::ustring((std::to_string(myQuat[i].x())+";"+std::to_string(myQuat[i].y())+";"+std::to_string(myQuat[i].z())+";"+std::to_string(myQuat[i].w())).c_str());
+		      std::string cd=  std::string((toString(myQuat[i].x())+";"+toString(myQuat[i].y())+";"+toString(myQuat[i].z())+";"+toString(myQuat[i].w())).c_str());
 		      attribute1->set_value(cd);     
 
 
@@ -751,7 +760,3 @@ std::string XmlReader::checkXMLFileType(){
   }
   
 }
-
-
-
-

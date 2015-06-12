@@ -4,7 +4,6 @@
    <pano id="stadium_endzone" name="Albertson's Stadium North Endzone" dir="/home/atran/a/spviewer-master/pics/pic2/" quat="0.000000;0.000000;-0.032494;0.999472"/>
    <pano id="stadium_topstairs" name="Albertson's Stadium Top of Stairs" dir="/home/atran/a/spviewer-master/pics/pic3/" quat="0.000000;0.000000;0.000000;1.000000" />
    
- <!--  <pano id="bsu_bigb"  	 name="Boise State 'B' Statue" left="/home/broncos/panoramas/refsets/big_B/L_big_B_pano_4k.png" right="/home/broncos/panoramas/refsets/big_B/R_big_B_pano_4k.png" horizontal="-2.3" vertical="0.0" quat="0;0;0;0;" />
    <pano id="bsu_cherryblossoms" name="Boise State Cherry Blossoms" left="/home/broncos/panoramas/refsets/cherry_blossoms/L_cherry_blossoms_pano_4k.png" right="/home/broncos/panoramas/refsets/cherry_blossoms/R_cherry_blossoms_pano_4k.png"  quat="0;0;0;0;" horizontal="0" vertical="0.0"/>
 
 
@@ -16,6 +15,6 @@
    <pano id="cb_top"		name="Top of Camel's Back" left="/home/broncos/panoramas/refsets/top_camels_back/L_top_camels_back_pano_4k.png" right="/home/broncos/panoramas/refsets/top_camels_back/R_top_camels_back_pano_4k.png" quat="0;0;0;0;"  horizontal="0" vertical="0.0"/>
    
    <pano id="ys_lake"		name="Yellowstone Lake" left="/home/broncos/scratch/scutchin/lake/left_16k.jpg" right="/home/broncos/scratch/scutchin/lake/right_16k.jpg"  quat="0;0;0;0;"  horizontal="0" vertical="0.0"/>
-   <pano id="ys_lake"		name="Yellowstone Lake" left="/home/broncos/scratch/jstohler/left_lake_yellowstone_4k.jpg" right="/home/broncos/scratch/jstohler/right_lake_yellowstone_4k.jpg" /> -->--&gt;
+   <pano id="ys_lake"		name="Yellowstone Lake" left="/home/broncos/scratch/jstohler/left_lake_yellowstone_4k.jpg" right="/home/broncos/scratch/jstohler/right_lake_yellowstone_4k.jpg" /> 
    
  </panoramas>

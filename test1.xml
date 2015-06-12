@@ -1,0 +1,9 @@
+<panoramas>
+   
+   <pano id="raw1" name="Albertson's Stadium Mid-Level"
+       left="/base/datasets/Panos/Museum1_L1_raw_q.png"
+       right="/base/datasets/Panos/Museum1_R1_raw_q.png"
+       quat="0.000000;0.000000;0.000000;1.000000"
+       horizontal="0.000000" vertical="0.000000"/>
+   
+ </panoramas>

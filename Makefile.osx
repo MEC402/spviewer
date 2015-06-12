@@ -1,0 +1,39 @@
+#Makefile for spViewer on Mac OSX platform
+# simple stereo panoramic viewer with exposed controls and documentation.
+# spViewer builds directly on top of OpenSceneGraph
+# export PKG_CONFIG=/usr/local/opt/libxml++/lib/pkgconfig:/usr/local/opt/glibmm/lib/pkgconfig:/usr/local/Cellar/libsigc++/2.4.0/lib/pkgconfig
+
+CXX = clang++
+#CXXFLAGS = -std=c++11 -g -I/usr/include/ -I/usr/local/include `pkg-config --cflags libxml++-2.6` 
+#clang  -stdlib=libc++ -lc++
+#CXXFLAGS =  -std=c++11 -stdlib=libc++  -g -I/usr/include/ -I/opt/local/include `pkg-config --cflags libxml++-2.6`
+#CXXFLAGS = --std=c++11 -stdlib=libstdc++ -g -I/usr/include/ -I/opt/local/include `pkg-config --cflags libxml++-2.6`
+CXXFLAGS = --std=c++11 -stdlib=libstdc++ -g -I../mxml-2.8/ -I/usr/include/ -I/opt/local/include 
+
+OSGLIBS = -L../mxml-2.8/ -L/opt/X11/lib -losg -losgUtil -losgText -losgViewer -losgGA -losgDB -lOpenThreads -lglut -lGLU -lGL -lXmu -lXext -lX11 -lm -lGL -lmxml 
+#XMLLIBS = -lawesomium-1-7 `pkg-config --libs libxml++-2.6`
+#XMLLIBS =  -m32 -framework Awesomium `pkg-config --libs libxml++-2.6`
+XMLLIBS =  
+
+LIBS=$(OSGLIBS) $(XMLLIBS) 
+
+#SRCS = spViewer.cpp XmlReader.cpp tiles.cpp ivSphere.cpp\
+#          imageProcess.cpp AwesomiumImage.cpp Menu.cpp InteractiveHandler.cpp\
+#          MethodDispatcher.cpp eventListener.cpp\
+#          imageHandler.cpp spKeys.cpp MenuHandler.cpp eyeSeparation.cpp
+
+SRCS = spViewer.cpp eyeSeparation.cpp spKeys.cpp panoXML.cpp tiles.cpp keyHandler.cpp ivSphere.cpp loadPanos.cpp
+
+OBJECTS = $(SRCS:.cpp=.o)
+
+
+all: spViewer
+
+spViewer:  $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o spViewer $(OBJECTS) $(LIBS)
+
+.PHONY:
+	
+clean:
+	rm -f spViewer *.o
+

@@ -6,40 +6,98 @@
  */
 
 #include <iostream>
+#include <osgViewer/Viewer>
 #include <osg/ShapeDrawable>
 #include <osg/MatrixTransform>
 #include <osg/PositionAttitudeTransform>
 #include <osgDB/ReadFile>
 #include <osgGA/TrackballManipulator>
-#include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
 #include <osgViewer/ViewerEventHandlers>
-#include "Menu.h"
+#include "eyeSeparation.h"
 #include "spKeys.h"
+#include "strings.h"
+
+// XML Parser
+/*#include "XmlReader.h"*/
+#include <mxml.h>
+#include "panoXML.h"
+#include "loadPanos.h"
+
+// declare global panoram list
+std::vector<Panorama*> Gpanoramas;
+
+// code to handle key press events
+#include "keyHandler.h"
+
+#ifdef _MAKE_SWITCHABLE_
+#include "Menu.h"
 #include "AwesomiumImage.h"
 #include "ivSphere.h"
 #include "MenuHandler.h"
 #include "imageHandler.h"
-#include "eyeSeparation.h"
 #include "Panorama.h"
-#include "XmlReader.h"
 #include <libxml++-2.6/libxml++/libxml++.h>
 #include <stdlib.h>
 using namespace xmlpp;
 
+#endif
+void buildViewerScene(osgViewer::Viewer *aviewer);
+void loadXMLfile(std::string xmlFileName);
+spKeys* Gmykeyui = NULL;
+osg::ref_ptr<osg::Group> GleftRotate;
+osg::ref_ptr<osgGA::CameraManipulator>Gcm;
+osg::ref_ptr<osg::Group> Groot;
+
+/*
+ * main function for startung up the panorama viewer
+ *  The viewer has four major components
+ *  An openSceneGraph Viewer 
+ *  An openSceneGraph Scene
+ *  An Awesomium HTML Menu object -- broken for most things
+ *  An XMLParser using the libxml++ - conflicts on mac.
+ */
 
 int main( int argc, char** argv )
 {
+   bool hasXMLfile = false;
+   std::string xmlFileName;
+
+   // first we build our openscene graph viewer objec
+   // we must have an openscene graph viewer object or there is no app.
+  // use an ArgumentParser object to manage the program arguments.
+  osg::ArgumentParser arguments(&argc, argv);
+  hasXMLfile = arguments.read("--xml", xmlFileName);
+//  hasXMLfile = arguments.read("--xml");
+  osgViewer::Viewer viewer(arguments);
+  buildViewerScene(&viewer);
+
+  if (hasXMLfile)
+  {
+    loadXMLfile(xmlFileName);
+  }
+
+  loadPanos *mylp = new loadPanos(Gpanoramas, GleftRotate.get());
+  Groot->addChild(mylp->getGroupNode());
+  // install command key handler
+// keyHandler* ih= new keyHandler(xmlFileName,&viewer,cm.get(),leftRotate.get(),root.get(),&row, &col, c->getImage());
+  std::cerr << "P0 = " << Gpanoramas[0]->getNumColumns() << std::endl;
+ keyHandler* ih= new keyHandler(Gpanoramas,mylp,Gcm.get(),&viewer, GleftRotate.get());
+  Gmykeyui->addListener(ih);
+
+  // viewer.realize();
+  // main loop to show and make viewer interactive
+  while ( !viewer.done() )
+  {
+//	c->updateMenu();
+    viewer.frame();
+  }
+
+#ifdef _MAKESWITCHABLE_
   // Set String Locale
   std::locale::global(std::locale(""));
   
   Document* d;
-  // use an ArgumentParser object to manage the program arguments.
-  osg::ArgumentParser arguments(&argc, argv);
-  
-
-  // Create viewer
-  osgViewer::Viewer viewer(arguments);
   
   
   // Controls
@@ -144,18 +202,22 @@ int main( int argc, char** argv )
     
   }
   
+      Menu* c = new Menu(menu, leftRotate.get(), panoramas, 2, &row, &col, xineramaEnabled);
+	  root->addChild(c->getGroupNode());
+	  root->addChild(c->getCamera());
+	  
+	  
+	MenuHandler* h= new MenuHandler(c);
+	aviewer->addEventHandler(h);
   
-  // Is Xinerama Enabled?
-  bool xineramaEnabled = false;
-  xineramaEnabled = arguments.read("-xin");
-  
+#endif
+}
 
-  
-  
-  
-  
+
+void buildViewerScene(osgViewer::Viewer *aviewer)
+{
   //TODO
-  std::cout << "Launching Viewer..." << std::endl;
+  std::cerr << "Building Viewer and Scene..." << std::endl;
   
   
   
@@ -192,26 +254,19 @@ int main( int argc, char** argv )
 
 
   // Create Root Node
-  osg::ref_ptr<osg::Group> root = new osg::Group;
+  Groot = new osg::Group;
+  osg::ref_ptr<osg::Group> root = Groot;
   
   
   // This node is for rotating the left sphere only
-  osg::ref_ptr<osg::Group> leftRotate = new osg::Switch;
-    leftRotate->setDataVariance(osg::Object::DYNAMIC);
+   GleftRotate = new osg::Switch;
+    GleftRotate->setDataVariance(osg::Object::DYNAMIC);
     
   // Add LeftRotate to Root
-  root->addChild(leftRotate.get());
-
-  
+  root->addChild(GleftRotate.get());
   
   int row = 0;
   int col = 0;
-  
-  
- 
-  
-  
-  
   
   root->getOrCreateStateSet()->setMode(GL_LIGHT1, osg::StateAttribute::ON);
   root->getOrCreateStateSet()->setMode(GL_LIGHT2, osg::StateAttribute::ON);
@@ -222,47 +277,29 @@ int main( int argc, char** argv )
   root->addChild(source4.get());
   root->addChild(source1.get());  
   
-  viewer.setUpViewAcrossAllScreens();
-  viewer.setSceneData(root.get());
+  aviewer->setUpViewAcrossAllScreens();
+  aviewer->setSceneData(root.get());
 
-
-
-	
-	 
   //viewer.getCamera()->setViewMatrix(osg::Matrix::lookAt(osg::Vec3d(0, 0, 0), rotated, osg::Vec3d(0, 0, -1)));
 
-  viewer.getCamera()->setProjectionMatrixAsPerspective(90, 1.6875, 1.0f,10000.0f);
-  viewer.getCamera()->setCullMask(0x00000001);
-  viewer.getCamera()->setCullMaskLeft(0x00000001);
-  viewer.getCamera()->setCullMaskRight(0x00000002);
-  viewer.getCamera()->setAllowEventFocus(false);
-      Menu* c = new Menu(menu, leftRotate.get(), panoramas, 2, &row, &col, xineramaEnabled);
-	  root->addChild(c->getGroupNode());
-	  root->addChild(c->getCamera());
-	  
-	  
-	MenuHandler* h= new MenuHandler(c);
+  aviewer->getCamera()->setProjectionMatrixAsPerspective(90, 1.6875, 1.0f,10000.0f);
+  aviewer->getCamera()->setCullMask(0x00000001);
+  aviewer->getCamera()->setCullMaskLeft(0x00000001);
+  aviewer->getCamera()->setCullMaskRight(0x00000002);
+  aviewer->getCamera()->setAllowEventFocus(false);
 	
 	
-	osg::ref_ptr<osgGA::CameraManipulator>cm = new osgGA::TrackballManipulator;
+   Gcm = new osgGA::TrackballManipulator;
 	//create a listener and event handler
         spKeys* mykeyui = new spKeys();
-	eyeSeparation* es=new eyeSeparation(&viewer);
+        Gmykeyui = mykeyui;
+	eyeSeparation* es=new eyeSeparation(aviewer);
 	
- 	imageHandler* ih= new imageHandler(xmlFileName,&viewer,cm.get(),leftRotate.get(),root.get(),&row, &col, c->getImage());
 	//ih->setVector(rotateDegree);
         mykeyui->addListener(es);
-	mykeyui->addListener(ih);
 	
-	
-	 //TODO
-
-    
-	
-	
-        viewer.addEventHandler(mykeyui);
-	viewer.addEventHandler(new osgViewer::ScreenCaptureHandler(new osgViewer::ScreenCaptureHandler::WriteToFile("filename", "jpg")));
-	viewer.addEventHandler(h);
+        aviewer->addEventHandler(mykeyui);
+//	aviewer->addEventHandler(new osgViewer::ScreenCaptureHandler(new osgViewer::ScreenCaptureHandler::WriteToFile("filename", "jpg")));
 
         
 	osg::Vec3 *avec;
@@ -273,25 +310,92 @@ int main( int argc, char** argv )
 	osg::Vec3d rotated = q * *avec;
 	
 	osg::DisplaySettings::instance()->setEyeSeparation(0.001f);
-	cm->setHomePosition(osg::Vec3(0.0f,0.0f,0.0f),rotated,osg::Vec3(0.0f,0.0f,-1.0f),false);
-	viewer.setCameraManipulator(cm,true);
+	Gcm->setHomePosition(osg::Vec3(0.0f,0.0f,0.0f),rotated,osg::Vec3(0.0f,0.0f,-1.0f),false);
+	aviewer->setCameraManipulator(Gcm,true);
 	
 	
-	viewer.realize();
-	
-	
-
-
-    
-	
-    while ( !viewer.done() ){
-	c->updateMenu();
-	
-	viewer.frame();
-    }
 }
+  
+void loadXMLfile(std::string xmlFileName)
+{
+  std::vector<double> rotateDegree;
+  std::cerr << "Parsing XML File..." << std::endl;
 
+  FILE *fp;
+  mxml_node_t *tree;
 
+  fp = fopen(xmlFileName.c_str(), "r");
+  if (fp == NULL) return;
+  tree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
+  fclose(fp);
+  if (tree == NULL) return;
 
+  Gpanoramas = parsePanos(tree);
 
+//  mxml_node_t *tree = mxmlNewElement(MXML_NO_PARENT, "element");
+#ifdef _SWITCH_OVER_PARSER
+// XML Panorama File
+  std::vector<Panorama*> panoramas;
+   const xmlpp::Node* pNode;
+  // Declare XMLReader
+      XmlReader reader;
+  // Read Panorama File
+  //readXMLPanoramas(xmlFileName, panoramas);
+  
+  try {
 
+    // Declare Parser
+    xmlpp::DomParser parser;
+    
+    
+    // Parser Settings
+    //We can have the text resolved/unescaped automatically.
+    parser.set_substitute_entities(true);
+    
+    
+    // Parse through input XML file
+    parser.parse_file(xmlFileName);
+   
+    
+    if(parser){
+      
+      // Parse XML Tree
+     pNode  = parser.get_document()->get_root_node();
+    
+     reader.setPnode(pNode);
+
+      // Check XML File Type
+      std::string result = reader.checkXMLFileType();
+
+      
+      // Panorama XML
+      if(result.compare(reader.getXMLTYPEPANOS()) == 0){
+	
+	//TODO
+	std::cout << "Loading Panoramas..." << std::endl;
+
+	// Parse and Load Panoramas
+	reader.parsePanoramas();
+
+	// Get Panoramas
+	panoramas = reader.getPanoramas();
+	rotateDegree= reader.getDegree();
+	//TODO
+	std::cout << "Panoramas Loaded." << std::endl;
+
+      // Other XML File
+      } else {
+	std::cout << "[ERROR] Unknown XML File: " << result << std::endl;
+      }
+
+    }
+    
+  } catch(const std::exception& ex) {
+    
+    std::cerr << "Exception caught: " << ex.what() << std::endl;
+//    return EXIT_FAILURE;
+    return ;
+    
+  }
+#endif
+}
