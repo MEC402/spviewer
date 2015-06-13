@@ -22,7 +22,7 @@ public:
   ~spKeys(){};
   virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa);
   virtual void accept(osgGA::GUIEventHandlerVisitor& v) {v.visit(*this);};
-  virtual bool spHandle(const osgGA::GUIEventAdapter& ea){};
+  virtual bool spHandle(const osgGA::GUIEventAdapter& ea){ return true; };
       
 };
 

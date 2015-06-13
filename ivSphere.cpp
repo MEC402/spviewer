@@ -1,6 +1,9 @@
 #include "ivSphere.h"
 #include <iostream>
-#include <math.h>
+//#include <math.h>
+
+#define M_PI 3.1415
+
 ivSphere::ivSphere(float radius, unsigned int rings, unsigned int sectors) : osg::Geometry()
 {
     sphereVertices = new osg::Vec3Array();

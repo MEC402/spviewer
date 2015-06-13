@@ -15,6 +15,7 @@ bool spKeys::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& a
   for(int i = 0; i < el.size(); i++){
     el.at(i)->spHandle(ea);
   }
+  return true;
 }
 
 

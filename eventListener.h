@@ -19,7 +19,7 @@ public:
   eventListener(){};
   ~eventListener(){};
   
-  virtual bool spHandle(const osgGA::GUIEventAdapter& ea){};
+  virtual bool spHandle(const osgGA::GUIEventAdapter& ea){ return false; };
   virtual void addListener(eventListener *ael) { el.push_back(ael); } ;
     
   

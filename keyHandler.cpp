@@ -18,11 +18,18 @@
 #include <osg/Geode>
 #include <osg/Texture2D>
 #include "ivSphere.h"
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#include <cmath>
+#endif
+
 #include <math.h>
 #include <iostream>
 #include "sys/types.h"
 /*#include "sys/sysinfo.h"*/
+#ifndef WIN32
 #include <unistd.h>
+#endif
 #include <ios>
 #include <iostream>
 #include <fstream>
@@ -67,10 +74,11 @@ void process_mem_usage(double& vm_usage, double& resident_set)
                >> O >> itrealvalue >> starttime >> vsize >> rss; // don't care about the rest
 
    stat_stream.close();
-
+#ifndef WIN32
    long page_size_kb = sysconf(_SC_PAGE_SIZE) / 1024; // in case x86-64 is configured to use 2MB pages
    vm_usage     = vsize / 1024.0;
    resident_set = rss * page_size_kb;
+#endif
 }
 osg::ref_ptr<osg::Geode>  createRefSphere(int row, int column, int numCols, int numRows)
 {

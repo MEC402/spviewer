@@ -2,6 +2,7 @@
 #ifndef PANORAMA_H_
 #define PANORAMA_H_  
 #include <iostream>
+#include <osg/Quat>
 #include <osg/Image>
 #include "tiles.h"
 
