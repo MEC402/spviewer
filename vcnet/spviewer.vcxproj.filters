@@ -68,9 +68,6 @@
     <ClInclude Include="..\ivSphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\js_delegate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\keyHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -52,16 +52,14 @@ int main(int argc, char** argv)
 	std::string xmlFileName;
 	std::cerr << "Spviewwer Started!" << std::endl;
 	osg::ref_ptr<osg::Group> GleftRotate = new osg::Switch;
+	GleftRotate->setDataVariance(osg::Object::DYNAMIC);
 	std::cerr << "Group created" << std::endl;
-#ifdef WIN32
 	osg::ref_ptr<osgGA::CameraManipulator>Gcm = new osgGA::TrackballManipulator;
-#else
-	osg::ref_ptr<osgGA::CameraManipulator>Gcm = new osgGA::CameraManipulator;
-#endif
 	//osg::ref_ptr<osgGA::CameraManipulator>Gcm;
 	std::cerr << "Camera Manipulator declared" << std::endl;
 	osg::ref_ptr<osg::Group> Groot = new osg::Group;
-   std::cerr << "Nodes Built!" << std::endl;
+	Groot->addChild(GleftRotate.get());
+	std::cerr << "Nodes Built!" << std::endl;
 
    // first we build our openscene graph viewer objec
    // we must have an openscene graph viewer object or there is no app.
@@ -82,15 +80,22 @@ int main(int argc, char** argv)
   }
   std::cerr << "XML Loaded" << std::endl;
 
-  loadPanos *mylp = new loadPanos(Gpanoramas, GleftRotate.get());
-  Groot->addChild(mylp->getGroupNode());
-  std::cerr << "Panos Loaded" << std::endl;
-  // install command key handler
-// keyHandler* ih= new keyHandler(xmlFileName,&viewer,cm.get(),leftRotate.get(),root.get(),&row, &col, c->getImage());
-  std::cerr << "P0 = " << Gpanoramas[0]->getNumColumns() << std::endl;
- keyHandler* ih= new keyHandler(Gpanoramas,mylp,Gcm.get(),&viewer, GleftRotate.get());
-  Gmykeyui->addListener(ih);
-  std::cerr << "Key Handler Added" << std::endl;
+  if (hasXMLfile)
+  {
+	  loadPanos *mylp = new loadPanos(Gpanoramas, GleftRotate.get());
+	  Groot->addChild(mylp->getGroupNode());
+	  std::cerr << "Panos Loaded" << std::endl;
+	  // install command key handler
+	  // keyHandler* ih= new keyHandler(xmlFileName,&viewer,cm.get(),leftRotate.get(),root.get(),&row, &col, c->getImage());
+	  std::cerr << "P0 = " << Gpanoramas[0]->getNumColumns() << std::endl;
+	  keyHandler* ih = new keyHandler(Gpanoramas, mylp, Gcm.get(), &viewer, GleftRotate.get());
+	  Gmykeyui->addListener(ih);
+	  std::cerr << "Key Handler Added" << std::endl;
+  }
+  else
+  {
+	  std::cerr << "No Panos to Load" << std::endl;
+  }
 
   // viewer.realize();
   // main loop to show and make viewer interactive
@@ -148,7 +153,6 @@ void buildViewerScene(osgViewer::Viewer *aviewer, osg::Group *Groot, osgGA::Came
   
   // This node is for rotating the left sphere only
    //GleftRotate = new osg::Switch();
-   GleftRotate->setDataVariance(osg::Object::DYNAMIC);
     
   // Add LeftRotate to Root
  // root->addChild(GleftRotate.get());
@@ -207,11 +211,7 @@ void buildViewerScene(osgViewer::Viewer *aviewer, osg::Group *Groot, osgGA::Came
 	{
 		Gcm->setHomePosition(osg::Vec3(0.0f, 0.0f, 0.0f), rotated, osg::Vec3(0.0f, 0.0f, -1.0f), false);
 	}
-#ifdef WIN32
-	
-#else
 	aviewer->setCameraManipulator(Gcm,true);
-#endif
 	
 }
   

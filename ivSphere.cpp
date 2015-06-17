@@ -1,14 +1,16 @@
 #include "ivSphere.h"
 #include <iostream>
+#include <osg/Array>
+
 //#include <math.h>
 
 #define M_PI 3.1415
 
 ivSphere::ivSphere(float radius, unsigned int rings, unsigned int sectors) : osg::Geometry()
 {
-    sphereVertices = new osg::Vec3Array();
-    sphereNormals = new osg::Vec3Array();
-    sphereTexCoords = new osg::Vec2Array();
+    sphereVertices = new osg::Vec3Array;
+    sphereNormals = new osg::Vec3Array;
+    sphereTexCoords = new osg::Vec2Array;
        float const R = 1./(float)(rings-1);
         float const S = 1./(float)(sectors-1);
         unsigned int r, s;
@@ -73,9 +75,9 @@ this->setNormalArray(sphereNormals);
 
 ivSphere::ivSphere(float radius, float lastart, float lastop, float lostart, float lostop, int atess)
 {
-    sphereVertices = new osg::Vec3Array();
-    sphereNormals = new osg::Vec3Array();
-    sphereTexCoords = new osg::Vec2Array();
+    sphereVertices = new osg::Vec3Array;
+    sphereNormals = new osg::Vec3Array;
+    sphereTexCoords = new osg::Vec2Array;
     int r, s;
     int rings = 10;
     int  sectors = 10;

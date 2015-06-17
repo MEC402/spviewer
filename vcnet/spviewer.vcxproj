@@ -133,8 +133,8 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\build\OpenSceneGraph-3.0.1\lib;C:\build\mxml-2.9\vcnet;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mxml1.lib;osg.lib;osgDB.lib;osgUtil.lib;osgText.lib;osgViewer.lib;osgGA.lib;OpenThreads.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\build\OSG\lib;C:\build\mxml-2.9\vcnet;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>osgViewer.lib;osgText.lib;opengl32.lib;osgGA.lib;osgDB.lib;osgUtil.lib;osg.lib;mxml1.lib;OpenThreads.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -160,7 +160,6 @@
     <ClInclude Include="..\imageProcess.h" />
     <ClInclude Include="..\InteractiveHandler.h" />
     <ClInclude Include="..\ivSphere.h" />
-    <ClInclude Include="..\js_delegate.h" />
     <ClInclude Include="..\keyHandler.h" />
     <ClInclude Include="..\loadPanos.h" />
     <ClInclude Include="..\Menu.h" />

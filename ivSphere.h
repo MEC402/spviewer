@@ -8,6 +8,7 @@
 #ifndef _IVSPHERE_H_
 #define _IVSPHERE_H_
 #include <vector>
+#include <osg/Array>
 
 #include <osg/Geometry>
 
