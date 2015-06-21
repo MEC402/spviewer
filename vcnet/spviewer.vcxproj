@@ -149,6 +149,7 @@
     <ClCompile Include="..\ivSphere.cpp" />
     <ClCompile Include="..\keyHandler.cpp" />
     <ClCompile Include="..\loadPanos.cpp" />
+    <ClCompile Include="..\Panorama.cpp" />
     <ClCompile Include="..\panoXML.cpp" />
     <ClCompile Include="..\spKeys.cpp" />
     <ClCompile Include="..\spViewer.cpp">

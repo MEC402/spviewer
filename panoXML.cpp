@@ -36,6 +36,7 @@ Panorama * parseSinglePano(mxml_node_t *anode)
    const char * rotate;
    const char * vertical;
    const char * quat;
+   const char * geometry;
 
    id = mxmlElementGetAttr(anode,"id");
    name = mxmlElementGetAttr(anode,"name");
@@ -44,12 +45,18 @@ Panorama * parseSinglePano(mxml_node_t *anode)
    rotate = mxmlElementGetAttr(anode,"rotate");
    vertical = mxmlElementGetAttr(anode,"vertical");
    quat = mxmlElementGetAttr(anode,"quat");
+   geometry = mxmlElementGetAttr(anode, "geometry");
 
    std::string sid(id); 
    std::string sname(name); 
    std::string sleft(left); 
-   std::string sright(right); 
-   Panorama *res = new Panorama(sid,name,left,right);
+   std::string sright(right);
+   std::string squat(quat);
+   std::string sgeom;
+
+   if (geometry != NULL) sgeom = geometry; 
+   else sgeom = "";
+   Panorama *res = new Panorama(sid,name,left,right, squat, sgeom);
 
    return res;;
 }

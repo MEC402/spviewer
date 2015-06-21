@@ -69,7 +69,7 @@ private:
       osg::Vec3d rotated, myAxis;
        osg::ref_ptr<osgGA::CameraManipulator> cm;
     osg::ref_ptr<osg::PositionAttitudeTransform> pat;
-
+	std::vector<Panorama *>myplist;
 };
 
 #endif

@@ -11,28 +11,9 @@ class Panorama {
   
 public:
   
-  Panorama(std::string id, std::string name, std::string left_dir, std::string right_dir){
-    this->id = id;
-    this->name = name;
-    this->left_dir = left_dir;
-    this->right_dir = right_dir;
-
-    
-    std::cerr << "Allocate Tile Sets" << std::endl;    
-    left  = new Tiles(left_dir,  512, 512, false);
-    right = new Tiles(right_dir, 512, 512, false);
-    
-    std::cerr << "Create Left Tile" << std::endl;    
-    left->createTiles();
-    std::cerr << "Create Right Tile" << std::endl;    
-    right->createTiles();
-    
-    leftImages = left->getAllTiles();
-    rightImages = right->getAllTiles();
-  }
+	Panorama(std::string id, std::string name, std::string left_dir, std::string right_dir, std::string aquat, std::string ageom);
   
-  
-  ~Panorama(){};
+  ~Panorama();
   
   
   std::string getID(){ return id; }
@@ -50,14 +31,16 @@ public:
   
   
 
-private:
   
   // Panorama Values
   std::string id;
   std::string name;
   std::string left_dir;
   std::string right_dir;
+  osg::Node *mygeometry;
   osg::Quat myquat;
+  double rotatedLeftSphere;  // unused
+  double verticalRotation; // unused
   
   
   Tiles* left;

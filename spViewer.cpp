@@ -84,9 +84,8 @@ int main(int argc, char** argv)
   {
 	  loadPanos *mylp = new loadPanos(Gpanoramas, GleftRotate.get());
 	  Groot->addChild(mylp->getGroupNode());
+	  //if (Gpanoramas[0]->mygeometry != NULL) Groot->addChild(Gpanoramas[0]->mygeometry);
 	  std::cerr << "Panos Loaded" << std::endl;
-	  // install command key handler
-	  // keyHandler* ih= new keyHandler(xmlFileName,&viewer,cm.get(),leftRotate.get(),root.get(),&row, &col, c->getImage());
 	  std::cerr << "P0 = " << Gpanoramas[0]->getNumColumns() << std::endl;
 	  keyHandler* ih = new keyHandler(Gpanoramas, mylp, Gcm.get(), &viewer, GleftRotate.get());
 	  Gmykeyui->addListener(ih);
@@ -231,70 +230,5 @@ void loadXMLfile(std::string xmlFileName)
 
   Gpanoramas = parsePanos(tree);
 
-//  mxml_node_t *tree = mxmlNewElement(MXML_NO_PARENT, "element");
-#ifdef _SWITCH_OVER_PARSER
-// XML Panorama File
-  std::vector<Panorama*> panoramas;
-   const xmlpp::Node* pNode;
-  // Declare XMLReader
-      XmlReader reader;
-  // Read Panorama File
-  //readXMLPanoramas(xmlFileName, panoramas);
-  
-  try {
 
-    // Declare Parser
-    xmlpp::DomParser parser;
-    
-    
-    // Parser Settings
-    //We can have the text resolved/unescaped automatically.
-    parser.set_substitute_entities(true);
-    
-    
-    // Parse through input XML file
-    parser.parse_file(xmlFileName);
-   
-    
-    if(parser){
-      
-      // Parse XML Tree
-     pNode  = parser.get_document()->get_root_node();
-    
-     reader.setPnode(pNode);
-
-      // Check XML File Type
-      std::string result = reader.checkXMLFileType();
-
-      
-      // Panorama XML
-      if(result.compare(reader.getXMLTYPEPANOS()) == 0){
-	
-	//TODO
-	std::cout << "Loading Panoramas..." << std::endl;
-
-	// Parse and Load Panoramas
-	reader.parsePanoramas();
-
-	// Get Panoramas
-	panoramas = reader.getPanoramas();
-	rotateDegree= reader.getDegree();
-	//TODO
-	std::cout << "Panoramas Loaded." << std::endl;
-
-      // Other XML File
-      } else {
-	std::cout << "[ERROR] Unknown XML File: " << result << std::endl;
-      }
-
-    }
-    
-  } catch(const std::exception& ex) {
-    
-    std::cerr << "Exception caught: " << ex.what() << std::endl;
-//    return EXIT_FAILURE;
-    return ;
-    
-  }
-#endif
 }

@@ -38,10 +38,10 @@ using namespace std;
 
 /* temporary global variables that need to be replaced */
 /* will not work as advertised  these should be in the panoramas */
-static std::vector<double> rotatedLeftSphere;
-static std::vector<double> verticalRotation;
-static std::vector<osg::Quat> myQuat;
-static std::vector<std::string> Ids;
+//static std::vector<double> rotatedLeftSphere;
+//static std::vector<double> verticalRotation;
+//static std::vector<osg::Quat> myQuat;
+//static std::vector<std::string> Ids;
 
 void process_mem_usage(double& vm_usage, double& resident_set)
 {
@@ -176,8 +176,9 @@ keyHandler::keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
                        osgViewer::Viewer *aviewer,
                        osg::Group *aroot)
 {
-  std::cerr << "Panos Size == " << plist.size() << std::endl;
-  std::cerr << "Panos Columns == " << plist[0]->getNumColumns() << std::endl;
+	myplist = plist;
+	std::cerr << "Panos Size == " << myplist.size() << std::endl;
+  std::cerr << "Panos Columns == " << myplist[0]->getNumColumns() << std::endl;
   ai = alp;
   cm = acm;
   myviewer = aviewer;
@@ -187,19 +188,9 @@ keyHandler::keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
   eyeDistance = 0.001f;
   t=0.0025;
   panos = (osg::Switch *)aroot;
-  col = plist[0]->getNumColumns();
-  row = plist[0]->getNumRows();
-/* this is a hack.  these values should be stored in the panoramas */
-  for (int i = 0; i < plist.size(); i++)
-  {
-    rotatedLeftSphere.push_back(0.0);
-    verticalRotation.push_back(0.0);
-    osg::Quat at;
-    myQuat.push_back(at);
-    std::string ast = "panoid" + i;
-    Ids.push_back(ast);
-     
-  }
+  col = myplist[0]->getNumColumns();
+  row = myplist[0]->getNumRows();
+
 }
 
 #ifdef _KEYHANDLER_CLEAN
@@ -346,9 +337,9 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 	    case 'p':
 		myindex=getIndex();
 //                std::cerr << "Index " << myindex << std::endl;
-		rotatedLeftSphere[myindex]-=t;
+		myplist[myindex]->rotatedLeftSphere-=t;
 //                std::cerr << "Index 1 " << myindex << std::endl;
-		degree=rotatedLeftSphere[myindex];
+		degree=myplist[myindex]->rotatedLeftSphere;
 //                std::cerr << "Index 2 " << myindex << std::endl;
 		rotate= (osg::Group*)panos->getChild(myindex);
 
@@ -373,15 +364,15 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea){
  		
 //                std::cerr << "Index 4" << myindex << std::endl;
                   if (pat != NULL)
-		    myQuat[myindex]=pat->getAttitude();
+		    myplist[myindex]->myquat=pat->getAttitude();
 		  return true;
 		  break;
 
 	    //rotate left sphere vertically
 	    case 'P':
 		 myindex=getIndex();
-		 rotatedLeftSphere[myindex]+=t;
-		 degree=rotatedLeftSphere[myindex];
+		 myplist[myindex]->rotatedLeftSphere+=t;
+		 degree=myplist[myindex]->rotatedLeftSphere;
 		 rotate= (osg::Group*)panos->getChild(myindex);
 
 		    for (int i=0;i<(row)*(col); i++)
@@ -390,7 +381,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 			osg::Quat x=pat->getAttitude();
 			pat->setAttitude(x*osg::Quat(t, osg::Vec3d(0.0f,0.0f,1.0f)));
 		    }
-    		  myQuat[myindex]=pat->getAttitude();
+    		  myplist[myindex]->myquat=pat->getAttitude();
 
 		  return true;
 		  break;
@@ -415,8 +406,8 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 	    case 'o':
 		// degreeVer=degreeVer+t;
 		 myindex=getIndex();
-		verticalRotation[myindex]-=t;
-		degreeVer=verticalRotation[myindex];
+		myplist[myindex]->verticalRotation-=t;
+		degreeVer=myplist[myindex]->verticalRotation;
 		rotate= (osg::Group*)panos->getChild(myindex);
 		 for (int i=0;i<(row)*(col); i++)
 		   {
@@ -426,7 +417,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 			x = x*osg::Quat(-t, myAxis);
 			pat->setAttitude(x);
 		   }
-		   		  myQuat[myindex]=pat->getAttitude();
+		   		  myplist[myindex]->myquat=pat->getAttitude();
 
 		  
 		 return true;
@@ -435,8 +426,8 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea){
  	    //rotate left sphere horizontally
 	    case 'O':
 		myindex=getIndex();
-		verticalRotation[myindex]+=t;
-		degreeVer=verticalRotation[myindex];
+		myplist[myindex]->verticalRotation+=t;
+		degreeVer=myplist[myindex]->verticalRotation;
 		rotate= (osg::Group*)panos->getChild(myindex);
 		    for (int i=0;i<(row)*(col); i++)
 		    {
@@ -446,7 +437,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea){
 			x = x*osg::Quat(t, myAxis);
 			pat->setAttitude(x);
 		    }
-		    		  myQuat[myindex]=pat->getAttitude();
+		    		  myplist[myindex]->myquat=pat->getAttitude();
 
 		  return true;
 		  break;
