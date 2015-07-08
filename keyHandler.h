@@ -19,29 +19,27 @@
 #include "sys/types.h"
 /*#include "sys/sysinfo.h"*/
 
-class keyHandler : public eventListener
-{
+class keyHandler : public eventListener {
 
 public:
 
-  void rotateCamera(char direction);
-  keyHandler();
-  keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
+    void rotateCamera(char direction);
+	keyHandler();
+	keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
              osgGA::CameraManipulator *acm,
              osgViewer::Viewer *aviewer,
              osg::Group *aroot);
 //  imageHandler(std::string d,osgViewer::Viewer *av,osgGA::CameraManipulator* cm, osg::Group* rt,osg::Group* _root, int* row,int* col, AwesomiumImage *a);
-  virtual bool spHandle(const osgGA::GUIEventAdapter& ea);
-
-   void setIndex(int a) { myoindex = a; }
-   int getIndex() { return myoindex; } 
+    virtual bool spHandle(const osgGA::GUIEventAdapter& ea);
+    void setIndex(int a) { myoindex = a; }
+    int getIndex() { return myoindex; } 
   
 private:
-  std::string filename;
-  long totalVirtualMem ;
-  long totalPhysMem;
-  int myoindex;
-//  struct sysinfo memInfo;
+    std::string filename;
+    long totalVirtualMem ;
+    long totalPhysMem;
+    int myoindex;
+	// struct sysinfo memInfo;
     bool ref;
     int myindex;
     double vm, rss;
@@ -66,8 +64,8 @@ private:
     int ang;
     loadPanos * ai;
     float a,b,c;
-      osg::Vec3d rotated, myAxis;
-       osg::ref_ptr<osgGA::CameraManipulator> cm;
+    osg::Vec3d rotated, myAxis;
+    osg::ref_ptr<osgGA::CameraManipulator> cm;
     osg::ref_ptr<osg::PositionAttitudeTransform> pat;
 	std::vector<Panorama *>myplist;
 };

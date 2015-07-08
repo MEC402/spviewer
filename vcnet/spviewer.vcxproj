@@ -127,7 +127,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>C:\build\OpenSceneGraph-3.2.1\include;C:\build\mxml-2.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\build\osg\include;C:\build\mxml\mxml-2.9\mxml-2.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <CompileAs>CompileAsCpp</CompileAs>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -135,7 +135,7 @@
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\build\OSG\lib;C:\build\mxml-2.9\vcnet;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\build\osg\lib;C:\build\osg\include\osg;C:\build\mxml\mxml-2.9\mxml-2.9\vcnet;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>osgViewer.lib;osgSim.lib;opengl32.lib;osgGA.lib;osgText.lib;osgDB.lib;osgUtil.lib;osg.lib;mxml1.lib;OpenThreads.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>spViewer.lib</ImportLibrary>
     </Link>

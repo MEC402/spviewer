@@ -42,6 +42,9 @@
     <ClCompile Include="..\eyeSeparation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Panorama.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\AwesomiumImage.h">

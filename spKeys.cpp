@@ -5,16 +5,14 @@
 
 #include "spKeys.h"
 
-
 spKeys::spKeys() : osgGA::GUIEventHandler(){}
 
-
-bool spKeys::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa)
-{
+bool spKeys::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa) {
   
-  for(int i = 0; i < el.size(); i++){
+  for(int i = 0; i < el.size(); i++) {
     el.at(i)->spHandle(ea);
   }
+
   return true;
 }
 

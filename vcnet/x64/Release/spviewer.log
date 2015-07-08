@@ -1,0 +1,53 @@
+﻿Build started 7/7/2015 2:31:24 PM.
+     1>Project "C:\build\ryan\spviewer\vcnet\spviewer.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /IC:\build\osg\include /I"C:\build\mxml\mxml-2.9\mxml-2.9" /nologo /W4 /WX- /O2 /Ob2 /D WIN32 /D NDEBUG /D _WINDOWS /D _SCL_SECURE_NO_WARNINGS /D _CRT_SECURE_NO_DEPRECATE /D "CMAKE_INTDIR=\"Release\"" /D _MBCS /D _MBCS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt ..\eventListener.cpp ..\eyeSeparation.cpp ..\ivSphere.cpp ..\keyHandler.cpp ..\loadPanos.cpp ..\Panorama.cpp ..\panoXML.cpp ..\spKeys.cpp ..\spViewer.cpp ..\tiles.cpp
+         eventListener.cpp
+     1>c:\build\ryan\spviewer\eventListener.h(22): warning C4100: 'ea' : unreferenced formal parameter
+         eyeSeparation.cpp
+     1>c:\build\ryan\spviewer\eventListener.h(22): warning C4100: 'ea' : unreferenced formal parameter
+         ivSphere.cpp
+     1>..\ivSphere.cpp(70): warning C4189: 'sectors' : local variable is initialized but not referenced
+     1>..\ivSphere.cpp(69): warning C4189: 'rings' : local variable is initialized but not referenced
+         keyHandler.cpp
+     1>c:\build\ryan\spviewer\eventListener.h(22): warning C4100: 'ea' : unreferenced formal parameter
+         loadPanos.cpp
+         Panorama.cpp
+         panoXML.cpp
+         spKeys.cpp
+     1>c:\build\ryan\spviewer\eventListener.h(22): warning C4100: 'ea' : unreferenced formal parameter
+     1>c:\build\ryan\spviewer\spKeys.h(25): warning C4100: 'ea' : unreferenced formal parameter
+     1>..\spKeys.cpp(10): warning C4100: 'aa' : unreferenced formal parameter
+         spViewer.cpp
+     1>c:\build\ryan\spviewer\eventListener.h(22): warning C4100: 'ea' : unreferenced formal parameter
+     1>c:\build\ryan\spviewer\spKeys.h(25): warning C4100: 'ea' : unreferenced formal parameter
+     1>..\spViewer.cpp(105): warning C4100: 'GleftRotate' : unreferenced formal parameter
+     1>..\spViewer.cpp(146): warning C4189: 'col' : local variable is initialized but not referenced
+     1>..\spViewer.cpp(145): warning C4189: 'row' : local variable is initialized but not referenced
+         tiles.cpp
+     1>..\tiles.cpp(147): warning C4100: 'dst_maxy' : unreferenced formal parameter
+     1>..\tiles.cpp(147): warning C4100: 'dst_maxx' : unreferenced formal parameter
+     1>..\tiles.cpp(147): warning C4100: 'dst_miny' : unreferenced formal parameter
+     1>..\tiles.cpp(147): warning C4100: 'dst_minx' : unreferenced formal parameter
+         Generating Code...
+     1>c:\build\ryan\spviewer\keyhandler.cpp(653): warning C4715: 'keyHandler::spHandle' : not all control paths return a value
+       ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /l"0x0409" /nologo /fo"x64\Release\spviewer.res" spviewer.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\build\ryan\spviewer\vcnet\x64\Release\spviewer.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\build\osg\lib /LIBPATH:C:\build\osg\include\osg /LIBPATH:"C:\build\mxml\mxml-2.9\mxml-2.9\vcnet" osgViewer.lib osgSim.lib opengl32.lib osgGA.lib osgText.lib osgDB.lib osgUtil.lib osg.lib mxml1.lib OpenThreads.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:\build\ryan\spviewer\vcnet\x64\Release\spviewer.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"spViewer.lib" /MACHINE:X64 x64\Release\spviewer.res
+         x64\Release\eventListener.obj
+         x64\Release\eyeSeparation.obj
+         x64\Release\ivSphere.obj
+         x64\Release\keyHandler.obj
+         x64\Release\loadPanos.obj
+         x64\Release\Panorama.obj
+         x64\Release\panoXML.obj
+         x64\Release\spKeys.obj
+         x64\Release\spViewer.obj
+         x64\Release\tiles.obj
+         spviewer.vcxproj -> C:\build\ryan\spviewer\vcnet\x64\Release\spviewer.exe
+     1>Done Building Project "C:\build\ryan\spviewer\vcnet\spviewer.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:45.44
