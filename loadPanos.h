@@ -41,12 +41,17 @@ public:
   int getIndex() { return curpano; }
   void setIndex(int a) { curpano = a; }
   osg::Group *getGroupNode() { return rightSphere;}
+  // TODO: Make sure return type isn't Group *
+  osg::Switch *getObjNode() { return objNode; }
 
 private:
   int curpano;
   
   //the node for right sphere
   osg::Switch* rightSphere;
+
+  //the node responsible for storing various data. i.e. maya objects
+  osg::Switch* objNode;
   
   //the geode nodes for displaying pictures on left and right sphere
   std::vector<osg::ref_ptr<osg::Group>> lsphere;

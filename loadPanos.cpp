@@ -6,14 +6,18 @@ loadPanos::loadPanos() {
 	curpano = -1;
 }
 
-loadPanos::loadPanos(std::vector<Panorama *> plist, osg::Group *l) {
+loadPanos::loadPanos(std::vector<Panorama *> plist, osg::Group *l) {	
 	curpano = -1;
 	panos = plist;
 	std::cerr << "P02 = " << panos[0]->getNumColumns() << std::endl;
 	rightSphere = new osg::Switch();
 	rightSphere->setDataVariance(osg::Object::DYNAMIC);
 	leftSphere = (osg::Switch *)l;
+	objNode = new osg::Switch();
+	objNode->setDataVariance(osg::Object::DYNAMIC);
 }
+
+
 
 //create a part of sphere with texture
 osg::ref_ptr<osg::Geode> createGeode(int row, int column, int numRows, int numCols, osg::ref_ptr<osg::Image>** images, int nodeMask) {
@@ -38,7 +42,7 @@ osg::ref_ptr<osg::Geode> createGeode(int row, int column, int numRows, int numCo
     float lastop  = ((float)row * verAngle + verAngle);
     float lostart = ((float)column * horAngle); 
     float lostop  = ((float)column * horAngle + horAngle);
-    //--TODO
+    //--TODO:
     ivSphere *ltop1;
     
 	if(row>11)
@@ -97,6 +101,12 @@ void loadPanos::loadNextImage() {
 		rightSphere->addChild(rsphere[0].get());
 		std::cerr <<"Add Children Left.... " << std::endl;
 		leftSphere->addChild(lsphere[0].get());
+
+		// Add Node* mygeometry to objNode	
+		// For maya, etc
+	
+		objNode->addChild(panos[0]->getMyGeometry().get());
+		objNode->setSingleChildOn(0);
 		std::cerr <<"Set Index.... " << std::endl;
 		setIndex(0);
 		std::cerr <<"Done.... " << std::endl;
@@ -135,6 +145,8 @@ void loadPanos::loadNextImage() {
 		leftSphere->addChild(lsphere[a].get());
 		leftSphere->setSingleChildOn(a);
 		rightSphere->setSingleChildOn(a);
+		objNode->addChild(panos[a]->getMyGeometry());
+		objNode->setSingleChildOn(a);
 
 		return;
 		
@@ -157,6 +169,7 @@ void loadPanos::loadNextImage() {
 	      
 			leftSphere->setSingleChildOn(a);
 			rightSphere->setSingleChildOn(a);
+			objNode->setSingleChildOn(a);
 		}
     }
 }

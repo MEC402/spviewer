@@ -35,7 +35,9 @@ Panorama::Panorama(std::string id, std::string name, std::string left_dir, std::
 	geom = ageom;
 	if (ageom.size() > 0) {
 		std::cerr << "Has attached Geoemtry file - loading " << ageom << std::endl;
+		// readNodeFile returns Node *; mygeometry is rer_ptr	
 		mygeometry = osgDB::readNodeFile(ageom);
+		std::cerr << mygeometry << std::endl;
 	}
 }
   

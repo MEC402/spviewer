@@ -4,6 +4,7 @@
 #include <iostream>
 #include <osg/Quat>
 #include <osg/Image>
+#include <osg/Node>
 #include "tiles.h"
 
 class Panorama { 
@@ -17,6 +18,7 @@ public:
 	std::string getLeftDir(){ return left_dir; }
 	std::string getRightDir(){ return right_dir; }
 	std::string getGeom(){ return geom; }
+	osg::ref_ptr<osg::Node> getMyGeometry(){ return mygeometry; }
 	
 	// TODO: Implement function.	
 	std::string getQuatToString(std::string q){ return q; }
@@ -32,7 +34,7 @@ public:
 	std::string left_dir;
 	std::string right_dir;
 	std::string geom;
-	osg::Node *mygeometry;
+	osg::ref_ptr<osg::Node> mygeometry;
 	osg::Quat myquat;
 	double rotatedLeftSphere;  // unused
 	double verticalRotation; // unused

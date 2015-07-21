@@ -108,11 +108,12 @@ osg::ref_ptr<osg::Geode>  createRefSphere(int row, int column, int numCols, int 
 void keyHandler::rotateCamera(char direction) {
 	osg::Vec3 *avec;  
 	osg::Quat q;
+
   
 	switch(direction){
 		case 'u':
 			ver += 1;
-			q = osg::Quat(((ver / 180.0) * M_PI), osg::Vec3d(1, 0, 0), 0.0, osg::Vec3d(0, 1, 0), ((hor / 180.0) * M_PI), osg::Vec3d(0, 0, 1));  
+			q = osg::Quat(((ver / 180.0) * M_PI), osg::Vec3d(1, 0, 0), 0.0, osg::Vec3d(0, 1, 0), ((hor / 180.0) * M_PI), osg::Vec3d(0, 0, 1));
 			break;
 		  
 		case 'd':
@@ -166,11 +167,13 @@ keyHandler::keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
 	panos = (osg::Switch *)aroot;
 	col = myplist[0]->getNumColumns();
 	row = myplist[0]->getNumRows();
-	fovy = 34;
+	fovy = 34.0;
 	aspect = (1080.0 / 1920.0);
-	degreeVer = 0;
+	degreeVer = 0.0;
 	degree = 0.0;
 	text = new osgText::Text;
+	ver = 0.0;
+	hor = 0.0;
 }
 
 #ifdef _KEYHANDLER_CLEAN
@@ -325,6 +328,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 					for (int i=0;i<(row)*(col); i++) {			
 						// std::cout << "row: " << row << " ;col: " << col << "\n";
 						// std::cerr << "Pat 3" << myindex << std::endl;
+						
 						pat=(osg::PositionAttitudeTransform*)rotate->getChild(i);
 						// std::cout << "six\n";
 						// std::cerr << "Pat 4" << pat << std::endl;
@@ -391,6 +395,20 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 					return true;
 					break;
 				
+				// switch mygeometry Node on/off
+				case osgGA::GUIEventAdapter::KEY_Space:
+					objNobj = ai->getObjNode();
+					if (isOn) {
+						objNobj->setAllChildrenOff();
+						isOn = false;
+					} else {
+						objNobj->setAllChildrenOn();
+						isOn = true;
+					}
+					return true;
+					break;
+					
+					
 				// rotate left sphere horizontally
 				case 'o':
 					// degreeVer=degreeVer+t;
@@ -534,33 +552,38 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				
 				case 'e':
 					// reset the zoom
-					aspect=(1080.0/1920.0);
+   				    aspect=(1080.0/1920.0);
 					fovy=34.0;
 					myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
 					// reset the camera position view
-					hor = -1;
-					//ver=0;
 				    rotateCamera('u');
 					rotated =osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, 
-						osg::Vec3d(0,0,1)) * osg::Vec3(0, 10, 0.0); 
-					x=0;
-					y=10;
-					z=0;
+						osg::Vec3d(0,0,1)) * osg::Vec3(0, 10, 0.0);
+					hor = 0.0;
+					ver = 0.0;
+					x=0.0;
+					y=10.0;
+					z=0.0;
 					a=0.0;
 				    b=0.0;
-		 			c=0.0;
+					c=0.0;
 	 	 		    cm->setHomePosition(osg::Vec3(0,0,0),osg::Vec3(0,10,0),osg::Vec3(0.0f,0.0f,-1.0f),false);
 	 	 		    myviewer->home();
 	 	  		    //degree=0.0;
-	 	  		    //degreeVer=0.0;
-	  		
-				//reset the left sphere position
-				for (int i=0;i<(row)*(col); i++) {
-					pat=(osg::PositionAttitudeTransform*)rotate->getChild(i);
-					pat->setAttitude(osg::Quat(degree, osg::Vec3d(0.0f,0.0f,1.0f)));
-					pat->setAttitude(osg::Quat(degreeVer, osg::Vec3d(1.0f,0.0f,0.0f)));
-				}
+					//degreeVer = 0.0;
 
+					//reset the left sphere position
+					/**for (int i = 0; i<(row)*(col); i++) {
+					std::cout << "i0: " << i << "\n";
+					pat = (osg::PositionAttitudeTransform*)rotate->getChild(i);//Line breaking the program
+					std::cout << "i1: " << i << "\n";
+					pat->setAttitude(osg::Quat(degree, osg::Vec3d(0.0f, 0.0f, 1.0f)));
+					std::cout << "i2: " << i << "\n";
+					pat->setAttitude(osg::Quat(degreeVer, osg::Vec3d(1.0f, 0.0f, 0.0f)));
+					std::cout << "i3: " << i << "\n";
+					} **/
+
+			
 				break;
 
 				//increase eye Separation

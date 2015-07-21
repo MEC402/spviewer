@@ -3,7 +3,7 @@
 #include <osg/Array>
 //#include <math.h>
 
-#define M_PI 3.141592653589793238462643383279
+#define M_PI 3.14159265358
 
 ivSphere::ivSphere(float radius, unsigned int rings, unsigned int sectors) : osg::Geometry() {
 	sphereVertices = new osg::Vec3Array;

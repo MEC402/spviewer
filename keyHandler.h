@@ -68,6 +68,9 @@ private:
     osg::ref_ptr<osgGA::CameraManipulator> cm;
     osg::ref_ptr<osg::PositionAttitudeTransform> pat;
 	std::vector<Panorama *>myplist;
+	osg::Switch * objNobj;
+	// for objNode off/on
+	bool isOn = true;
 };
 
 #endif

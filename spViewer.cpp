@@ -1,4 +1,3 @@
-
 /*
  * spViewer.cpp
  *
@@ -35,6 +34,8 @@ std::vector<Panorama*> Gpanoramas;
 
 void buildViewerScene(osgViewer::Viewer *aviewer,osg::Group *Groot, osgGA::CameraManipulator *Gcm, osg::Group *Gleftrotate);
 void loadXMLfile(std::string xmlFileName);
+void printScreenInfo();
+
 spKeys* Gmykeyui = NULL;
 
 /*
@@ -57,15 +58,8 @@ int main(int argc, char** argv) {
 	std::cerr << "Camera Manipulator declared" << std::endl;
 	osg::ref_ptr<osg::Group> Groot = new osg::Group;
 	Groot->addChild(GleftRotate.get());
-
-	/**	TODO: add geometry node to Groot?
-	osg::ref_ptr<osg::Switch> objSwitch= new osg::Switch;
-	Groot->addChild(objSwitch.get());
-	**/
-	
-
 	std::cerr << "Nodes Built!" << std::endl;
-    // first we build our openscene graph viewer objec
+    // first we build our openscene graph viewer object
     // we must have an openscene graph viewer object or there is no app.
     // use an ArgumentParser object to manage the program arguments.
     osg::ArgumentParser arguments(&argc, argv);
@@ -86,6 +80,14 @@ int main(int argc, char** argv) {
 
 		loadPanos *mylp = new loadPanos(Gpanoramas, GleftRotate.get());
 		Groot->addChild(mylp->getGroupNode());
+
+
+		// Add obj Node to Groot to handle geometry data and maya objects
+		// room for future additions
+		Groot->addChild(mylp->getObjNode());
+
+
+
 		//if (Gpanoramas[0]->mygeometry != NULL) Groot->addChild(Gpanoramas[0]->mygeometry);
 		std::cerr << "Panos Loaded" << std::endl;
 		std::cerr << "P0 = " << Gpanoramas[0]->getNumColumns() << std::endl;
@@ -157,11 +159,12 @@ void buildViewerScene(osgViewer::Viewer *aviewer, osg::Group *Groot, osgGA::Came
     root->addChild(source3.get());
     root->addChild(source4.get());
     root->addChild(source1.get());  
+	printScreenInfo();
+	aviewer->getCamera()->setProjectionMatrixAsPerspective(34.0, 1080.0/1920.0, 1.0f,10000.0f);
 	aviewer->setUpViewAcrossAllScreens();
 	aviewer->setSceneData(root);
 	std::cerr << "Scene Set!" << std::endl;
 	// viewer.getCamera()->setViewMatrix(osg::Matrix::lookAt(osg::Vec3d(0, 0, 0), rotated, osg::Vec3d(0, 0, -1)));
-	aviewer->getCamera()->setProjectionMatrixAsPerspective(90, 1.6875, 1.0f,10000.0f);
 	aviewer->getCamera()->setCullMask(0x00000001);
 	aviewer->getCamera()->setCullMaskLeft(0x00000001);
 	aviewer->getCamera()->setCullMaskRight(0x00000002);
@@ -213,4 +216,29 @@ void loadXMLfile(std::string xmlFileName) {
 	if (tree == NULL) return;
 	Gpanoramas = parsePanos(tree);
 	std::cerr <<"Gpanoramas: " << Gpanoramas.size();
-} 
+}
+
+void printScreenInfo()
+{
+	osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
+	if (!wsi)
+	{
+		osg::notify(osg::NOTICE) << "View::setUpViewAcrossAllScreens() : Error, no WindowSystemInterface available, cannot create windows." << std::endl;
+		return;
+	}
+
+
+	double fovy, aspectRatio, zNear, zFar;
+	//_camera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+
+	//    double fovx = atan(tan(osg::DegreesToRadians(fovy*0.5)) * aspectRatio) * 2.0;
+
+	unsigned int numScreens = wsi->getNumScreens();
+	std::cerr << "Numscreens = " << numScreens << std::endl;
+	for (unsigned int i = 0; i<numScreens; ++i)
+	{
+		unsigned int width, height;
+		wsi->getScreenResolution(osg::GraphicsContext::ScreenIdentifier(i), width, height);
+		std::cerr << "Wxh = " << width << "x" << height << std::endl;
+	}
+}
