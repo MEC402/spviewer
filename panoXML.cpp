@@ -11,8 +11,9 @@ std::vector<Panorama *> parsePanos(mxml_node_t *atree) {
 	std::vector<Panorama*> mypanos;
 	Panorama *apano = NULL;
 	mxml_node_t *node;
+        std::cerr <<  atree->value.element.name << std::endl;
 
-	for (node = mxmlFindElement(atree, atree, "pano", NULL, NULL, MXML_DESCEND_FIRST);
+	for (node = mxmlFindElement(atree, atree, "pano", NULL, NULL, MXML_DESCEND);
 		node != NULL;
 		node = mxmlFindElement(node, atree,"pano",NULL, NULL, MXML_NO_DESCEND)) {
 		apano = NULL;

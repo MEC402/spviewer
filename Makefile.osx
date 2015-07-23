@@ -22,7 +22,7 @@ LIBS=$(OSGLIBS) $(XMLLIBS)
 #          MethodDispatcher.cpp eventListener.cpp\
 #          imageHandler.cpp spKeys.cpp MenuHandler.cpp eyeSeparation.cpp
 
-SRCS = spViewer.cpp eyeSeparation.cpp spKeys.cpp panoXML.cpp tiles.cpp keyHandler.cpp ivSphere.cpp loadPanos.cpp
+SRCS = spViewer.cpp eyeSeparation.cpp spKeys.cpp panoXML.cpp tiles.cpp keyHandler.cpp ivSphere.cpp loadPanos.cpp Panorama.o
 
 OBJECTS = $(SRCS:.cpp=.o)
 

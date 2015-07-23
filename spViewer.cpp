@@ -33,10 +33,10 @@ std::vector<Panorama*> Gpanoramas;
 #include "keyHandler.h"
 
 
-void buildViewerScene(osgViewer::Viewer *aviewer,osg::Group *Groot, osgGA::CameraManipulator *Gcm, osg::Group *Gleftrotate);
+void buildViewerScene(osgViewer::Viewer *aviewer,osg::Group *Groot, osgGA::CameraManipulator *Gcm, osg::Group *Gleftrotate, bool multiscreen);
 void loadXMLfile(std::string xmlFileName);
 void printScreenInfo();
-void setupViewScreens(osgViewer::Viewer *aviewer, double fovy, double aRatio);
+void setupViewScreens(osgViewer::Viewer *aviewer, double fovy, double aRatio, bool multiscreen);
 
 spKeys* Gmykeyui = NULL;
 
@@ -50,6 +50,7 @@ spKeys* Gmykeyui = NULL;
 
 int main(int argc, char** argv) {
 	bool hasXMLfile = false;
+	bool hasMultiScreen = false;
 	std::string xmlFileName;
 	std::cerr << "Spviewer Started!" << std::endl;
 	osg::ref_ptr<osg::Group> GleftRotate = new osg::Switch;
@@ -66,10 +67,11 @@ int main(int argc, char** argv) {
     // use an ArgumentParser object to manage the program arguments.
     osg::ArgumentParser arguments(&argc, argv);
     hasXMLfile = arguments.read("--xml", xmlFileName);
+    hasMultiScreen = arguments.read("--multiscreen");
     // hasXMLfile = arguments.read("--xml");
     osgViewer::Viewer viewer(arguments);
     std::cerr << "Viewer Built!" << std::endl;
-    buildViewerScene(&viewer,Groot.get(),Gcm.get(),GleftRotate.get());
+    buildViewerScene(&viewer,Groot.get(),Gcm.get(),GleftRotate.get(),hasMultiScreen);
     std::cerr << "Scene Built!" << std::endl;
 
 	if (hasXMLfile) {
@@ -111,7 +113,7 @@ int main(int argc, char** argv) {
 	}
 } 
 
-void buildViewerScene(osgViewer::Viewer *aviewer, osg::Group *Groot, osgGA::CameraManipulator *Gcm, osg::Group *GleftRotate) {
+void buildViewerScene(osgViewer::Viewer *aviewer, osg::Group *Groot, osgGA::CameraManipulator *Gcm, osg::Group *GleftRotate, bool multiscreen) {
 	// TODO
 	std::cerr << "Building Viewer and Scene..." << std::endl;
 	// Create and set Scene Lights
@@ -164,7 +166,7 @@ void buildViewerScene(osgViewer::Viewer *aviewer, osg::Group *Groot, osgGA::Came
 	printScreenInfo();
 	aviewer->getCamera()->setProjectionMatrixAsPerspective(34.0, 1080.0/1920.0, 1.0f,10000.0f);
 //	aviewer->setUpViewAcrossAllScreens();
-        setupViewScreens(aviewer, 34.8093072, 1080.0/1920.0);
+        setupViewScreens(aviewer, 34.8093072, 1080.0/1920.0,multiscreen);
 	aviewer->setSceneData(root);
 	std::cerr << "Scene Set!" << std::endl;
 	// viewer.getCamera()->setViewMatrix(osg::Matrix::lookAt(osg::Vec3d(0, 0, 0), rotated, osg::Vec3d(0, 0, -1)));
@@ -174,10 +176,6 @@ void buildViewerScene(osgViewer::Viewer *aviewer, osg::Group *Groot, osgGA::Came
 	aviewer->getCamera()->setAllowEventFocus(false);
 	std::cerr << "Camera Properties Set!" << std::endl;
 
-	#ifndef WIN32
-		Gcm = new osgGA::TrackballManipulator;
-	#endif
-	
 	// create a listener and event handler
     spKeys* mykeyui = new spKeys();
     Gmykeyui = mykeyui;
@@ -210,10 +208,11 @@ void loadXMLfile(std::string xmlFileName) {
 
 	tree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
 	const char* rootElement = mxmlGetElement(tree);
+/*	This is not needed but held just in case.
 	char compare[] = "panoramas";
-	
 	if (strcmp(rootElement, compare) != 0) 
 		tree = tree->child;
+*/
 	
 	fclose(fp);
 	if (tree == NULL) return;
@@ -246,7 +245,7 @@ void printScreenInfo()
 	}
 }
 
-void setupViewScreens(osgViewer::Viewer *aviewer, double fovy, double aRatio)
+void setupViewScreens(osgViewer::Viewer *aviewer, double fovy, double aRatio, bool multiscreen)
 {
 osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
     if (!wsi)
@@ -259,13 +258,17 @@ osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getW
     double zNear, zFar;
     //_camera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
 
-//   double fovx = atan(tan(osg::DegreesToRadians(fovy*0.5)) * aRatio) * 2.0;
-   double fovx = osg::DegreesToRadians(30.0);
+   double fovx = atan(tan(osg::DegreesToRadians(fovy*0.5)) * aRatio) * 2.0;
+//   double fovx = osg::DegreesToRadians(30.0);
 
-   unsigned int numScreens = 5;
+   unsigned int numScreens = 1;
+   double rotate_x = 0.0;
    std::cerr << "Numscreens = " << numScreens << std::endl;
-   double rotate_x = - double(numScreens-1) * 0.5 * fovx;
-   double translate_x =  5 * 1080.0/1920.0 * aRatio;
+   if (multiscreen)
+   {
+       numScreens = 5;
+       rotate_x = - double(numScreens-1) * 0.5 * fovx;
+   }
    unsigned int width, height;
      wsi->getScreenResolution(osg::GraphicsContext::ScreenIdentifier(), width, height);
      std::cerr << "Wxh = " << width << "x" << height << std::endl;
@@ -296,16 +299,13 @@ osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getW
 
        for(unsigned int i=0; i<numScreens; ++i, rotate_x += fovx)
         {
-          std::cerr << "Camera #" << i << " " << 1080*i << std::endl;
+          std::cerr << "Camera #" << i << " " << (width/numScreens)*i << std::endl;
             osg::ref_ptr<osg::Camera> camera = new osg::Camera;
             camera->setGraphicsContext(gc.get());
-            camera->setViewport(new osg::Viewport(1080*i, 0, 1080, 1920));
-//            aviewer->addSlave(camera.get(), osg::Matrixd(), osg::Matrixd::rotate( rotate_x, 0.0, 1.0, 0.0));
-               double newAspectRatio = double(traits->width) / double(traits->height);
-	       double aspectRatioChange = newAspectRatio / aRatio;
-	
-	       aviewer->addSlave(camera.get(), osg::Matrixd::translate( translate_x - aspectRatioChange, 0.0, 0.0) * osg::Matrix::scale(1.0/aspectRatioChange,1.0,1.0), osg::Matrixd() );
-	        translate_x -= aspectRatioChange * 2.0;
+            int lcorn = (width/numScreens);
+            std::cerr << "Lcorn " << lcorn << " " << lcorn * i << std::endl;
+            camera->setViewport(new osg::Viewport(lcorn*i, 0, lcorn, height));
+            aviewer->addSlave(camera.get(), osg::Matrixd(), osg::Matrixd::rotate( rotate_x, 0.0, 1.0, 0.0));
 
        }
        aviewer->assignSceneDataToCameras();
