@@ -32,9 +32,11 @@ std::vector<Panorama*> Gpanoramas;
 // code to handle key press events
 #include "keyHandler.h"
 
+
 void buildViewerScene(osgViewer::Viewer *aviewer,osg::Group *Groot, osgGA::CameraManipulator *Gcm, osg::Group *Gleftrotate);
 void loadXMLfile(std::string xmlFileName);
 void printScreenInfo();
+void setupViewScreens(osgViewer::Viewer *aviewer, double fovy, double aRatio);
 
 spKeys* Gmykeyui = NULL;
 
@@ -161,7 +163,8 @@ void buildViewerScene(osgViewer::Viewer *aviewer, osg::Group *Groot, osgGA::Came
     root->addChild(source1.get());  
 	printScreenInfo();
 	aviewer->getCamera()->setProjectionMatrixAsPerspective(34.0, 1080.0/1920.0, 1.0f,10000.0f);
-	aviewer->setUpViewAcrossAllScreens();
+//	aviewer->setUpViewAcrossAllScreens();
+        setupViewScreens(aviewer, 34.8093072, 1080.0/1920.0);
 	aviewer->setSceneData(root);
 	std::cerr << "Scene Set!" << std::endl;
 	// viewer.getCamera()->setViewMatrix(osg::Matrix::lookAt(osg::Vec3d(0, 0, 0), rotated, osg::Vec3d(0, 0, -1)));
@@ -242,3 +245,69 @@ void printScreenInfo()
 		std::cerr << "Wxh = " << width << "x" << height << std::endl;
 	}
 }
+
+void setupViewScreens(osgViewer::Viewer *aviewer, double fovy, double aRatio)
+{
+osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface();
+    if (!wsi)
+    {
+        osg::notify(osg::NOTICE)<<"View::setUpViewScreens() : Error, no WindowSystemInterface available, cannot create windows."<<std::endl;
+        return;
+    }
+
+
+    double zNear, zFar;
+    //_camera->getProjectionMatrixAsPerspective(fovy, aspectRatio, zNear, zFar);
+
+//   double fovx = atan(tan(osg::DegreesToRadians(fovy*0.5)) * aRatio) * 2.0;
+   double fovx = osg::DegreesToRadians(30.0);
+
+   unsigned int numScreens = 5;
+   std::cerr << "Numscreens = " << numScreens << std::endl;
+   double rotate_x = - double(numScreens-1) * 0.5 * fovx;
+   double translate_x =  5 * 1080.0/1920.0 * aRatio;
+   unsigned int width, height;
+     wsi->getScreenResolution(osg::GraphicsContext::ScreenIdentifier(), width, height);
+     std::cerr << "Wxh = " << width << "x" << height << std::endl;
+
+            osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
+            traits->screenNum = -1;
+            traits->x = 0;
+            traits->y = 0;
+            traits->width = width;
+            traits->height = height;
+            traits->windowDecoration = false;
+            traits->doubleBuffer = true;
+            traits->sharedContext = 0;
+            traits->overrideRedirect = true;
+
+            osg::ref_ptr<osg::GraphicsContext> gc = osg::GraphicsContext::createGraphicsContext(traits.get());
+
+
+            osgViewer::GraphicsWindow* gw = dynamic_cast<osgViewer::GraphicsWindow*>(gc.get());
+            if (gw)
+            {
+                osg::notify(osg::NOTICE)<<"  GraphicsWindow has been created successfully."<<gw<<std::endl;
+            }
+            else
+            {
+                osg::notify(osg::NOTICE)<<"  GraphicsWindow has not been created successfully."<<std::endl;
+            }
+
+       for(unsigned int i=0; i<numScreens; ++i, rotate_x += fovx)
+        {
+          std::cerr << "Camera #" << i << " " << 1080*i << std::endl;
+            osg::ref_ptr<osg::Camera> camera = new osg::Camera;
+            camera->setGraphicsContext(gc.get());
+            camera->setViewport(new osg::Viewport(1080*i, 0, 1080, 1920));
+//            aviewer->addSlave(camera.get(), osg::Matrixd(), osg::Matrixd::rotate( rotate_x, 0.0, 1.0, 0.0));
+               double newAspectRatio = double(traits->width) / double(traits->height);
+	       double aspectRatioChange = newAspectRatio / aRatio;
+	
+	       aviewer->addSlave(camera.get(), osg::Matrixd::translate( translate_x - aspectRatioChange, 0.0, 0.0) * osg::Matrix::scale(1.0/aspectRatioChange,1.0,1.0), osg::Matrixd() );
+	        translate_x -= aspectRatioChange * 2.0;
+
+       }
+       aviewer->assignSceneDataToCameras();
+}
+
