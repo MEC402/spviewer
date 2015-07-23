@@ -9,10 +9,7 @@ XMLLIBS = -lawesomium-1-7 `pkg-config --libs libxml++-2.6`
 
 LIBS=$(OSGLIBS) $(XMLLIBS)
 
-SRCS = spViewer.cpp XmlReader.cpp tiles.cpp ivSphere.cpp\
-          imageProcess.cpp Menu.cpp InteractiveHandler.cpp\
-          AwesomiumImage.cpp MethodDispatcher.cpp eventListener.cpp\
-          imageHandler.cpp spKeys.cpp MenuHandler.cpp eyeSeparation.cpp
+SRCS = spViewer.cpp eyeSeparation.cpp spKeys.cpp panoXML.cpp tiles.cpp keyHandler.cpp ivSphere.cpp loadPanos.cpp Panorama.o
 
 OBJECTS = $(SRCS:.cpp=.o)
 
