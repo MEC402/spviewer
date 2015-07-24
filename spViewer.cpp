@@ -69,14 +69,15 @@ int main(int argc, char** argv) {
     hasXMLfile = arguments.read("--xml", xmlFileName);
     hasMultiScreen = arguments.read("--multiscreen");
     // hasXMLfile = arguments.read("--xml");
+    if (hasXMLfile) {
+	    loadXMLfile(xmlFileName);
+     }
+
     osgViewer::Viewer viewer(arguments);
     std::cerr << "Viewer Built!" << std::endl;
     buildViewerScene(&viewer,Groot.get(),Gcm.get(),GleftRotate.get(),hasMultiScreen);
     std::cerr << "Scene Built!" << std::endl;
 
-	if (hasXMLfile) {
-	    loadXMLfile(xmlFileName);
-	}
   
 	std::cerr << "XML Loaded" << std::endl;
 
