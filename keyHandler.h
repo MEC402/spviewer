@@ -33,6 +33,7 @@ public:
     virtual bool spHandle(const osgGA::GUIEventAdapter& ea);
     void setIndex(int a) { myoindex = a; }
     int getIndex() { return myoindex; } 
+    void resetView();
   
 private:
     std::string filename;

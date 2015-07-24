@@ -174,76 +174,9 @@ keyHandler::keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
 	text = new osgText::Text;
 	ver = 0.0;
 	hor = 0.0;
+	myAxis=osg::Vec3d(10.0,0.0,0.0);
 }
 
-#ifdef _KEYHANDLER_CLEAN
-keyHandler::keyHandler(std::string d,osgViewer::Viewer *av, osgGA::CameraManipulator* _cm,osg::Group* rt, osg::Group* _root, int* _row, int* _col,AwesomiumImage *awe){
-	hor=0;
-	filename=d;
-	ai=awe;
-	zupdate=0.0f;
-	xupdate=0.0f;
-	cm=_cm;
-	ver=0;
-	a=0.0;
-	b=0.0;
-	c=0.0;
-	x=0.0;
-	y=10.0;
-	z=0.0;
-	eyeDistance = 0.001f;
-	row=_row;
-	col=_col;
-	degreeVer=0;
-	degree=0.0;
-	aspect=1.6875;
-	root=_root;
-	ref=false;
-	t=0.0025;
-	myviewer=av;
-	fovy=90.0;
-	rotate=new osg::Group;
-	panos= (osg::Switch*) rt;
-	rotate->setDataVariance(osg::Object::DYNAMIC);
-	osg::Vec3 *avec;
-	osg::Quat q = osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, osg::Vec3d(0,0,1));
-	avec = new osg::Vec3(0, 10, 0.0);
-	rotated = q * *avec;
-	myAxis=osg::Vec3d(10.0,0.0,0.0);
-	ang=0;
-	verang=0;
-	text= new osgText::Text;
-	text->setCharacterSize(0.05);
-	text->setAxisAlignment(osgText::TextBase::SCREEN);
-	text->setDataVariance(osg::Object::DYNAMIC);
-	text->setPosition(osg::Vec3(01.0f,-0.0f,0.0f));
-	// hud camera
-	camera = new osg::Camera;
-	camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF);
-	camera->setClearMask( GL_DEPTH_BUFFER_BIT );
-	camera->setRenderOrder( osg::Camera::POST_RENDER);
-	camera->setAllowEventFocus( false );
-	camera->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF );
-	camera->setViewMatrixAsLookAt(osg::Vec3d(a, b, c),rotated, osg::Vec3d(0, 0, -1));
-	osg::ref_ptr<osg::Geode> textGeode = new osg::Geode;
-	textGeode->addDrawable(text);
-	camera->addChild(textGeode.get());   
-	root->addChild(camera);
-	pat= new osg::PositionAttitudeTransform;
-	refSphere= new osg::ref_ptr<osg::PositionAttitudeTransform>[(12)*(12)] ;
-	
-	for(int i=0;i<12;i++) {
-	  
-		for(int j=0;j<12;j++) {
-			refSphere[12*i+j]=new osg::PositionAttitudeTransform;
-			refSphere[i*(12)+j]->setDataVariance(osg::Object::DYNAMIC);
-			refSphere[(12)*i+j]->addChild(createRefSphere(i,j,12, 12).get());
-			refSphere[(12)*i+j]->setNodeMask(0x0);
-			root->addChild(refSphere[i*(12)+j]);
-		}
-    }
-}
-#endif
 
 bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 	switch(ea.getEventType()) {
@@ -551,40 +484,8 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 					break;
 				
 				case 'e':
-					// reset the zoom
-   				    aspect=(1080.0/1920.0);
-					fovy=34.0;
-					myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
-					// reset the camera position view
-				    rotateCamera('u');
-					rotated =osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, 
-						osg::Vec3d(0,0,1)) * osg::Vec3(0, 10, 0.0);
-					hor = 0.0;
-					ver = 0.0;
-					x=0.0;
-					y=10.0;
-					z=0.0;
-					a=0.0;
-				    b=0.0;
-					c=0.0;
-	 	 		    cm->setHomePosition(osg::Vec3(0,0,0),osg::Vec3(0,10,0),osg::Vec3(0.0f,0.0f,-1.0f),false);
-	 	 		    myviewer->home();
-	 	  		    //degree=0.0;
-					//degreeVer = 0.0;
-
-					//reset the left sphere position
-					/**for (int i = 0; i<(row)*(col); i++) {
-					std::cout << "i0: " << i << "\n";
-					pat = (osg::PositionAttitudeTransform*)rotate->getChild(i);//Line breaking the program
-					std::cout << "i1: " << i << "\n";
-					pat->setAttitude(osg::Quat(degree, osg::Vec3d(0.0f, 0.0f, 1.0f)));
-					std::cout << "i2: " << i << "\n";
-					pat->setAttitude(osg::Quat(degreeVer, osg::Vec3d(1.0f, 0.0f, 0.0f)));
-					std::cout << "i3: " << i << "\n";
-					} **/
-
-			
-				break;
+                                    resetView();
+				    break;
 
 				//increase eye Separation
 				case '1':
@@ -675,3 +576,96 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 	}
 }
 
+void keyHandler::resetView()
+{
+// reset the zoom
+aspect=(1080.0/1920.0);
+fovy=34.0;
+myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
+// reset the camera position view
+rotateCamera('u');
+rotated =osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, 
+osg::Vec3d(0,0,1)) * osg::Vec3(0, 10, 0.0);
+osg::Quat q = osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, osg::Vec3d(0,0,1));
+myAxis =q * osg::Vec3d(10,0.0,0.0) ;   
+hor = 0.0;
+ver = 0.0;
+x=0.0;
+y=10.0;
+z=0.0;
+a=0.0;
+b=0.0;
+c=0.0;
+cm->setHomePosition(osg::Vec3(0,0,0),osg::Vec3(0,10,0),osg::Vec3(0.0f,0.0f,-1.0f),false);
+myviewer->home();
+}
+
+
+#ifdef _KEYHANDLER_CLEAN
+keyHandler::keyHandler(std::string d,osgViewer::Viewer *av, osgGA::CameraManipulator* _cm,osg::Group* rt, osg::Group* _root, int* _row, int* _col,AwesomiumImage *awe){
+	hor=0;
+	filename=d;
+	ai=awe;
+	zupdate=0.0f;
+	xupdate=0.0f;
+	cm=_cm;
+	ver=0;
+	a=0.0;
+	b=0.0;
+	c=0.0;
+	x=0.0;
+	y=10.0;
+	z=0.0;
+	eyeDistance = 0.001f;
+	row=_row;
+	col=_col;
+	degreeVer=0;
+	degree=0.0;
+	aspect=1.6875;
+	root=_root;
+	ref=false;
+	t=0.0025;
+	myviewer=av;
+	fovy=90.0;
+	rotate=new osg::Group;
+	panos= (osg::Switch*) rt;
+	rotate->setDataVariance(osg::Object::DYNAMIC);
+	osg::Vec3 *avec;
+	osg::Quat q = osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, osg::Vec3d(0,0,1));
+	avec = new osg::Vec3(0, 10, 0.0);
+	rotated = q * *avec;
+	myAxis=osg::Vec3d(10.0,0.0,0.0);
+	ang=0;
+	verang=0;
+	text= new osgText::Text;
+	text->setCharacterSize(0.05);
+	text->setAxisAlignment(osgText::TextBase::SCREEN);
+	text->setDataVariance(osg::Object::DYNAMIC);
+	text->setPosition(osg::Vec3(01.0f,-0.0f,0.0f));
+	// hud camera
+	camera = new osg::Camera;
+	camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF);
+	camera->setClearMask( GL_DEPTH_BUFFER_BIT );
+	camera->setRenderOrder( osg::Camera::POST_RENDER);
+	camera->setAllowEventFocus( false );
+	camera->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OFF );
+	camera->setViewMatrixAsLookAt(osg::Vec3d(a, b, c),rotated, osg::Vec3d(0, 0, -1));
+	osg::ref_ptr<osg::Geode> textGeode = new osg::Geode;
+	textGeode->addDrawable(text);
+	camera->addChild(textGeode.get());   
+	root->addChild(camera);
+	pat= new osg::PositionAttitudeTransform;
+	refSphere= new osg::ref_ptr<osg::PositionAttitudeTransform>[(12)*(12)] ;
+	
+	for(int i=0;i<12;i++) {
+	  
+		for(int j=0;j<12;j++) {
+			refSphere[12*i+j]=new osg::PositionAttitudeTransform;
+			refSphere[i*(12)+j]->setDataVariance(osg::Object::DYNAMIC);
+			refSphere[(12)*i+j]->addChild(createRefSphere(i,j,12, 12).get());
+			refSphere[(12)*i+j]->setNodeMask(0x0);
+			root->addChild(refSphere[i*(12)+j]);
+		}
+    }
+}
+#endif
