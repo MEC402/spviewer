@@ -163,7 +163,6 @@ keyHandler::keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
 	a = b = c = x = 0.0;
 	y = 10.0; z = 0.0;
 	eyeDistance = 0.001f;
-	t=0.0025;
 	panos = (osg::Switch *)aroot;
 	col = myplist[0]->getNumColumns();
 	row = myplist[0]->getNumRows();
@@ -248,7 +247,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 					// return is from getIndex()
 					// std::cout << "two\n";
 					// TODO: CODE IS BROKEN HERE!
-					myplist[myindex]->rotatedLeftSphere-=t;
+					myplist[myindex]->rotatedLeftSphere-=STEPSIZE;
 					// std::cerr << "Index 1 " << myindex << std::endl;
 					// std::cout << "three\n";
 					degree=myplist[myindex]->rotatedLeftSphere;
@@ -270,7 +269,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 							// std::cout << "seven\n";
 							osg::Quat x=pat->getAttitude();
 							// std::cout << "eight\n";
-							x=x*osg::Quat(-t, osg::Vec3d(0.0f,0.0f,1.0f));
+							x=x*osg::Quat(-STEPSIZE, osg::Vec3d(0.0f,0.0f,1.0f));
 							// std::cout << "nine\n";
 						   pat->setAttitude(x);
 							// std::cout << "ten\n";
@@ -295,14 +294,14 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				// rotate left sphere vertically
 				case 'P':
 					myindex=getIndex();
-					myplist[myindex]->rotatedLeftSphere+=t;
+					myplist[myindex]->rotatedLeftSphere+=STEPSIZE;
 					degree=myplist[myindex]->rotatedLeftSphere;
 					rotate= (osg::Group*)panos->getChild(myindex);
 
 					for (int i=0;i<(row)*(col); i++) {
 						pat=(osg::PositionAttitudeTransform*)rotate->getChild(i);
 						osg::Quat x=pat->getAttitude();
-						pat->setAttitude(x*osg::Quat(t, osg::Vec3d(0.0f,0.0f,1.0f)));
+						pat->setAttitude(x*osg::Quat(STEPSIZE, osg::Vec3d(0.0f,0.0f,1.0f)));
 					}
 
 					myplist[myindex]->myquat=pat->getAttitude();
@@ -346,14 +345,14 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				case 'o':
 					// degreeVer=degreeVer+t;
 					myindex=getIndex();
-					myplist[myindex]->verticalRotation-=t;
+					myplist[myindex]->verticalRotation-=STEPSIZE;
 					degreeVer=myplist[myindex]->verticalRotation;
 					rotate= (osg::Group*)panos->getChild(myindex);
 				
 					for (int i=0;i<(row)*(col); i++) {
 						pat=(osg::PositionAttitudeTransform*)rotate->getChild(i);
 						osg::Quat x=pat->getAttitude();
-						x = x*osg::Quat(-t, myAxis);
+						x = x*osg::Quat(-STEPSIZE, myAxis);
 						pat->setAttitude(x);
 				    }
 				   
@@ -365,14 +364,14 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				// rotate left sphere horizontally
 				case 'O':
 					myindex=getIndex();
-					myplist[myindex]->verticalRotation+=t;
+					myplist[myindex]->verticalRotation+=STEPSIZE;
 					degreeVer=myplist[myindex]->verticalRotation;
 					rotate= (osg::Group*)panos->getChild(myindex);
 					
 					for (int i=0;i<(row)*(col); i++) {
 						pat=(osg::PositionAttitudeTransform*)rotate->getChild(i);
 						osg::Quat x=pat->getAttitude();
-						x = x*osg::Quat(t, myAxis);
+						x = x*osg::Quat(STEPSIZE, myAxis);
 						pat->setAttitude(x);
 					}
 					

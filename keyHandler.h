@@ -19,6 +19,8 @@
 #include "sys/types.h"
 /*#include "sys/sysinfo.h"*/
 
+#define STEPSIZE 0.00128
+
 class keyHandler : public eventListener {
 
 public:
@@ -50,7 +52,7 @@ private:
     double tangent;
     float zupdate, xupdate;
     double prevang,aspect, verang, preverang;
-    double degree,degreeVer,x,y,z, t, fovy;
+    double degree,degreeVer,x,y,z,  fovy;
     osg::Group* rotate;
     osg::Switch* panos;
     osg::ref_ptr<osg::PositionAttitudeTransform>* refSphere;
