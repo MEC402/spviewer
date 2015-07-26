@@ -73,103 +73,65 @@ osg::ref_ptr<osg::Geode> createGeode(int row, int column, int numRows, int numCo
 void loadPanos::loadNextImage() {
  
   std::cerr <<"Load Next Panorama .... " << std::endl;
+  int findex;
 	if (getIndex()==-1) 
         {
 		// Get the number of columns and rows from the Panorama
-                int findex = 0;
-           std::cerr << "New Index = " << findex << std::endl;
-                buildGeometry(findex);
-           std::cerr << "geometry built" << std::endl;
+                findex = 0;
 		setIndex(findex);
-           std::cerr << "Index Set" << std::endl;
-		leftSphere->setSingleChildOn(findex);
-		rightSphere->setSingleChildOn(findex);
-           std::cerr << "Children on" << std::endl;
-		
-		return;
-    } else {
-		int a= getIndex();
-		setIndex((a+1)%panos.size());
-		a= getIndex();
-		//if the pana was not created yet, create it
-                if (lsphere[a]->getNumChildren() == 0)
-                {
-             std::cerr << " Building New Goemetry "<< std::endl;
-                    buildGeometry(a);
-		    leftSphere->setSingleChildOn(a);
-		    rightSphere->setSingleChildOn(a);
-
-		 } else {
-             std::cerr << " switch pano only" << std::endl;
-			int cols = panos[a]->getNumColumns();
-			int rows = panos[a]->getNumRows();
-			col = cols;
-			row = rows;
-			osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
-
-			for (int i = 0; i < rows; i++) {
-			
-				for (int j = 0; j < cols; j++) {	    
-					pat=(osg::PositionAttitudeTransform*)lsphere[a]->getChild(j + i * cols);	   	          	
-					pat->setAttitude(panos[a]->getQuat());
-				}	
-			}
-			
-			leftSphere->setSingleChildOn(a);
-			rightSphere->setSingleChildOn(a);
-		}
+         } 
+         else {
+		findex= getIndex();
+		setIndex((findex+1+panos.size())%panos.size());
+                findex = getIndex();
 	}
+        switchImagePano(findex);
 }
-
 void loadPanos::loadPrevImage() {
  
   std::cerr <<"Load Prev Panorama .... " << std::endl;
+  int findex;
 	if (getIndex()==-1) 
         {
 		// Get the number of columns and rows from the Panorama
-                int findex = panos.size() - 1;
-           std::cerr << "New Index = " << findex << std::endl;
-                buildGeometry(findex);
-           std::cerr << "geometry built" << std::endl;
+                findex = panos.size() - 1;
 		setIndex(findex);
-           std::cerr << "Index Set" << std::endl;
-		leftSphere->setSingleChildOn(findex);
-		rightSphere->setSingleChildOn(findex);
-           std::cerr << "Children on" << std::endl;
-		
-		return;
-    } else {
-		int a= getIndex();
-		setIndex((a-1+panos.size())%panos.size());
-		a= getIndex();
-		//if the pana was not created yet, create it
-                if (lsphere[a]->getNumChildren() == 0)
-                {
-             std::cerr << " Building New Goemetry "<< std::endl;
-                    buildGeometry(a);
-		    leftSphere->setSingleChildOn(a);
-		    rightSphere->setSingleChildOn(a);
-
-		 } else {
-             std::cerr << " switch pano only" << std::endl;
-			int cols = panos[a]->getNumColumns();
-			int rows = panos[a]->getNumRows();
-			col = cols;
-			row = rows;
-			osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
-
-			for (int i = 0; i < rows; i++) {
-			
-				for (int j = 0; j < cols; j++) {	    
-					pat=(osg::PositionAttitudeTransform*)lsphere[a]->getChild(j + i * cols);	   	          	
-					pat->setAttitude(panos[a]->getQuat());
-				}	
-			}
-			
-			leftSphere->setSingleChildOn(a);
-			rightSphere->setSingleChildOn(a);
-		}
+         } 
+         else {
+		findex= getIndex();
+		setIndex((findex-1+panos.size())%panos.size());
+                findex = getIndex();
 	}
+        switchImagePano(findex);
+}
+
+void loadPanos::switchImagePano(int iindex) 
+{
+ 
+  std::cerr <<" Change Panorama .... " << std::endl;
+  //if the pana was not created yet, create it
+  if (lsphere[iindex]->getNumChildren() == 0)
+  {
+      std::cerr << " Building New Goemetry "<< std::endl;
+      buildGeometry(iindex);
+  }
+
+  std::cerr << " switch pano only" << std::endl;
+   int cols = panos[iindex]->getNumColumns();
+   int rows = panos[iindex]->getNumRows();
+   col = cols;
+   row = rows;
+   osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
+
+        for (int i = 0; i < rows; i++) {
+           for (int j = 0; j < cols; j++) {	    
+	     pat=(osg::PositionAttitudeTransform*)lsphere[iindex]->getChild(j + i * cols);	   	          	
+		pat->setAttitude(panos[iindex]->getQuat());
+			}	
+	}
+			
+    leftSphere->setSingleChildOn(iindex);
+    rightSphere->setSingleChildOn(iindex);
 }
 
 void loadPanos::buildGeometry(int pindex)

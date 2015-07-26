@@ -39,6 +39,7 @@ public:
   void loadNextImage();
   void loadPrevImage();
   void buildGeometry(int pindex);
+  void switchImagePano(int iindex);
   int getIndex() { return curpano; }
   void setIndex(int a) { curpano = a; }
   osg::Group *getGroupNode() { return rightSphere;}

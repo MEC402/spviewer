@@ -313,9 +313,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				case 'n':
 					ai->loadNextImage();
 					myindex=ai->getIndex();
-					// rotate= (osg::Group*)panos->getChild(myindex);
 					std::cerr << "Show Next Image ..." << std::endl;
-				 
 					return true;
 					break;
 
@@ -323,7 +321,6 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				case 'N':
 					ai->loadPrevImage();
 					myindex=ai->getIndex();
-			
 					return true;
 					break;
 				
