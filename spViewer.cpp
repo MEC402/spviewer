@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 		std::cerr << "P0 = " << Gpanoramas[0]->getNumColumns() << std::endl;
 		keyHandler* ih = new keyHandler(Gpanoramas, mylp, Gcm.get(), &viewer, GleftRotate.get());
 		// TODO: this is a test. Get rid of
-		ih->setIndex(0);
+		//ih->setIndex(0);
 		//std::cout << "\n" << "Dis shit: " << ih->getIndex();
 		Gmykeyui->addListener(ih);
 		std::cerr << "Key Handler Added" << std::endl;

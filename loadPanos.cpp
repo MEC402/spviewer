@@ -13,6 +13,13 @@ loadPanos::loadPanos(std::vector<Panorama *> plist, osg::Group *l) {
 	rightSphere = new osg::Switch();
 	rightSphere->setDataVariance(osg::Object::DYNAMIC);
 	leftSphere = (osg::Switch *)l;
+        for (int i=0; i < panos.size(); i++)
+        {
+          rsphere.push_back(new osg::Group);
+          lsphere.push_back(new osg::Group);
+	  rightSphere->addChild(rsphere[i].get());
+	  leftSphere->addChild(lsphere[i].get());
+        }
 	objNode = new osg::Switch();
 	objNode->setDataVariance(osg::Object::DYNAMIC);
 }
@@ -64,189 +71,36 @@ osg::ref_ptr<osg::Geode> createGeode(int row, int column, int numRows, int numCo
 }
 
 void loadPanos::loadNextImage() {
+ 
   std::cerr <<"Load Next Panorama .... " << std::endl;
-
-  if (getIndex()==-1) {
-        std::cerr <<"Construct Geode .... " << std::endl;
+	if (getIndex()==-1) 
+        {
 		// Get the number of columns and rows from the Panorama
-        std::cerr <<"Size .... " << panos.size() << std::endl;
-		int cols = panos[0]->getNumColumns();
-        std::cerr <<"Assign rows and columns .... " << std::endl;
-		int rows = panos[0]->getNumRows();
-        std::cerr <<"Assign rows and columns .... " << std::endl;
-		col = cols;
-		row = rows;
-        std::cerr <<"Create ivSpheres/Group .... " << std::endl;
-		//create the ivsphere's with texture
-		lsphere.push_back( new osg::Group);
-		rsphere.push_back( new osg::Group);
-		osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
-		osg::ref_ptr<osg::PositionAttitudeTransform>* leftrotate = new osg::ref_ptr<osg::PositionAttitudeTransform>[rows * cols];
-        std::cerr <<"Build each geode .... " << std::endl;
-		
-		for (int i = 0; i < rows; i++) {
-			
-			for (int j = 0; j < cols; j++) {	    
-				leftrotate[j + i * cols] = new osg::PositionAttitudeTransform;
-				leftrotate[j + i * cols]->addChild(createGeode(i, j, rows, cols, panos[0]->getLeftImages(), 0x01));
-				lsphere[0]->addChild(leftrotate[j + i * cols].get());
-   				//pat=(osg::PositionAttitudeTransform*)leftrotate[j + i * cols]->getChild();	   	          	
-   				pat=(osg::PositionAttitudeTransform*)lsphere[0]->getChild(j + i * cols);	   
-				pat->setAttitude(panos[0]->getQuat());
-				rsphere[0]->addChild( createGeode(i, j, rows, cols, panos[0]->getRightImages(), 0x02)); 
-			}	
-		}
-
-		std::cerr <<"Add Children right.... " << std::endl;
-		rightSphere->addChild(rsphere[0].get());
-		std::cerr <<"Add Children Left.... " << std::endl;
-		leftSphere->addChild(lsphere[0].get());
-
-		// Add Node* mygeometry to objNode	
-		// For maya, etc
-	
-		objNode->addChild(panos[0]->getMyGeometry().get());
-		objNode->setSingleChildOn(0);
-		std::cerr <<"Set Index.... " << std::endl;
-		setIndex(0);
-		std::cerr <<"Done.... " << std::endl;
+                int findex = 0;
+           std::cerr << "New Index = " << findex << std::endl;
+                buildGeometry(findex);
+           std::cerr << "geometry built" << std::endl;
+		setIndex(findex);
+           std::cerr << "Index Set" << std::endl;
+		leftSphere->setSingleChildOn(findex);
+		rightSphere->setSingleChildOn(findex);
+           std::cerr << "Children on" << std::endl;
 		
 		return;
-      
     } else {
 		int a= getIndex();
 		setIndex((a+1)%panos.size());
 		a= getIndex();
-	
 		//if the pana was not created yet, create it
-		if (a>=lsphere.size()) {
-			int cols = panos[a]->getNumColumns();
-			int rows = panos[a]->getNumRows();
-			col = cols;
-			row = rows;
-			//create the ivsphere's with texture
-			lsphere.push_back( new osg::Group);
-			rsphere.push_back( new osg::Group);
-			osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
-			osg::ref_ptr<osg::PositionAttitudeTransform>* leftrotate = new osg::ref_ptr<osg::PositionAttitudeTransform>[rows * cols];
+                if (lsphere[a]->getNumChildren() == 0)
+                {
+             std::cerr << " Building New Goemetry "<< std::endl;
+                    buildGeometry(a);
+		    leftSphere->setSingleChildOn(a);
+		    rightSphere->setSingleChildOn(a);
 
-			for (int i = 0; i < rows; i++) {
-		
-				for (int j = 0; j < cols; j++) {	    
-					leftrotate[j + i * cols] = new osg::PositionAttitudeTransform;
-					leftrotate[j + i * cols]->addChild(createGeode( i, j, rows, cols, panos[a]->getLeftImages(), 0x01));
-					lsphere[a]->addChild(leftrotate[j + i * cols]);
-					pat=(osg::PositionAttitudeTransform*)leftrotate[j + i * cols];	   	          	
-					rsphere[a]->addChild( createGeode( i, j, rows, cols, panos[a]->getRightImages(), 0x02)); 
-				}	
-			}
-
-		rightSphere->addChild(rsphere[a].get());
-		leftSphere->addChild(lsphere[a].get());
-		leftSphere->setSingleChildOn(a);
-		rightSphere->setSingleChildOn(a);
-		objNode->addChild(panos[a]->getMyGeometry());
-		objNode->setSingleChildOn(a);
-
-		return;
-		
-		} else {
-			int cols = panos[a]->getNumColumns();
-			int rows = panos[a]->getNumRows();
-			col = cols;
-			row = rows;
-  			osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
-
-			for (int i = 0; i < rows; i++) {
-	      
-				for (int j = 0; j < cols; j++) {	    
-					//leftrotate[j + i * cols] = new osg::PositionAttitudeTransform;
-					//lsphere[a]->addChild(leftrotate[j + i * cols]);
-					pat=(osg::PositionAttitudeTransform*)lsphere[a]->getChild(j + i * cols);	   	          	
-					pat->setAttitude(panos[a]->getQuat());
-				}	
-			}
-	      
-			leftSphere->setSingleChildOn(a);
-			rightSphere->setSingleChildOn(a);
-			objNode->setSingleChildOn(a);
-		}
-    }
-}
-
-void loadPanos::loadPrevImage() {
- 
-  std::cerr <<"Load Prev Panorama .... " << std::endl;
-	if (getIndex()==-1) {
-		// Get the number of columns and rows from the Panorama
-                int findex = panos.size() - 1;
-		int cols = panos[findex]->getNumColumns();
-		int rows = panos[findex]->getNumRows();
-		col = cols;
-		row = rows;
-		//create the ivsphere's with texture
-		lsphere.push_back( new osg::Group);
-		rsphere.push_back( new osg::Group);
-		osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
-		osg::ref_ptr<osg::PositionAttitudeTransform>* leftrotate = new osg::ref_ptr<osg::PositionAttitudeTransform>[rows * cols];
-
-		for (int i = 0; i < rows; i++) {
-			
-			for (int j = 0; j < cols; j++) {	    
-				leftrotate[j + i * cols] = new osg::PositionAttitudeTransform;
-				leftrotate[j + i * cols]->addChild(createGeode( i, j, rows, cols, panos[findex]->getLeftImages(), 0x01));
-				lsphere[0]->addChild(leftrotate[j + i * cols].get());
-				//pat=(osg::PositionAttitudeTransform*)leftrotate[j + i * cols]->getChild();	   	          	
-				pat=(osg::PositionAttitudeTransform*)lsphere[0]->getChild(j + i * cols);	   
-				pat->setAttitude(panos[findex]->getQuat());
-				rsphere[0]->addChild( createGeode( i, j, rows, cols, panos[findex]->getRightImages(), 0x02)); 
-			}	
-		}
-	
-		rightSphere->addChild(rsphere[0].get());
-		leftSphere->addChild(lsphere[0].get());
-                std::cerr << " PSize = " << panos.size() -1 << std::endl;
-		setIndex(panos.size()-1);
-		
-		return;
-      
-    } else {
-		int a= getIndex();
-		setIndex((a-1+lsphere.size())%panos.size());
-		a= getIndex();
-		//if the pana was not created yet, create it
-
-		if (a>=lsphere.size()) {
-			int cols = panos[a]->getNumColumns();
-			int rows = panos[a]->getNumRows();
-			col = cols;
-			row = rows;
-			//create the ivsphere's with texture
-			lsphere.push_back( new osg::Group);
-			rsphere.push_back( new osg::Group);
-			osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
-			osg::ref_ptr<osg::PositionAttitudeTransform>* leftrotate = new osg::ref_ptr<osg::PositionAttitudeTransform>[rows * cols];
-
-			for (int i = 0; i < rows; i++) {
-				
-				for (int j = 0; j < cols; j++){	    
-					leftrotate[j + i * cols] = new osg::PositionAttitudeTransform;
-					leftrotate[j + i * cols]->addChild(createGeode( i, j, rows, cols, panos[a]->getLeftImages(), 0x01));
-					lsphere[a]->addChild(leftrotate[j + i * cols]);
-					pat=(osg::PositionAttitudeTransform*)leftrotate[j + i * cols];	   	          	
-					pat->setAttitude(panos[a]->getQuat());
-					rsphere[a]->addChild( createGeode( i, j, rows, cols, panos[a]->getRightImages(), 0x02)); 
-				}	
-			}
-		  
-			rightSphere->addChild(rsphere[a].get());
-			leftSphere->addChild(lsphere[a].get());
-			leftSphere->setSingleChildOn(a);
-			rightSphere->setSingleChildOn(a);
-	  
-			return;
-	  
-		} else {
+		 } else {
+             std::cerr << " switch pano only" << std::endl;
 			int cols = panos[a]->getNumColumns();
 			int rows = panos[a]->getNumRows();
 			col = cols;
@@ -256,8 +110,6 @@ void loadPanos::loadPrevImage() {
 			for (int i = 0; i < rows; i++) {
 			
 				for (int j = 0; j < cols; j++) {	    
-					//leftrotate[j + i * cols] = new osg::PositionAttitudeTransform;
-					//lsphere[a]->addChild(leftrotate[j + i * cols]);
 					pat=(osg::PositionAttitudeTransform*)lsphere[a]->getChild(j + i * cols);	   	          	
 					pat->setAttitude(panos[a]->getQuat());
 				}	
@@ -267,4 +119,88 @@ void loadPanos::loadPrevImage() {
 			rightSphere->setSingleChildOn(a);
 		}
 	}
+}
+
+void loadPanos::loadPrevImage() {
+ 
+  std::cerr <<"Load Prev Panorama .... " << std::endl;
+	if (getIndex()==-1) 
+        {
+		// Get the number of columns and rows from the Panorama
+                int findex = panos.size() - 1;
+           std::cerr << "New Index = " << findex << std::endl;
+                buildGeometry(findex);
+           std::cerr << "geometry built" << std::endl;
+		setIndex(findex);
+           std::cerr << "Index Set" << std::endl;
+		leftSphere->setSingleChildOn(findex);
+		rightSphere->setSingleChildOn(findex);
+           std::cerr << "Children on" << std::endl;
+		
+		return;
+    } else {
+		int a= getIndex();
+		setIndex((a-1+panos.size())%panos.size());
+		a= getIndex();
+		//if the pana was not created yet, create it
+                if (lsphere[a]->getNumChildren() == 0)
+                {
+             std::cerr << " Building New Goemetry "<< std::endl;
+                    buildGeometry(a);
+		    leftSphere->setSingleChildOn(a);
+		    rightSphere->setSingleChildOn(a);
+
+		 } else {
+             std::cerr << " switch pano only" << std::endl;
+			int cols = panos[a]->getNumColumns();
+			int rows = panos[a]->getNumRows();
+			col = cols;
+			row = rows;
+			osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
+
+			for (int i = 0; i < rows; i++) {
+			
+				for (int j = 0; j < cols; j++) {	    
+					pat=(osg::PositionAttitudeTransform*)lsphere[a]->getChild(j + i * cols);	   	          	
+					pat->setAttitude(panos[a]->getQuat());
+				}	
+			}
+			
+			leftSphere->setSingleChildOn(a);
+			rightSphere->setSingleChildOn(a);
+		}
+	}
+}
+
+void loadPanos::buildGeometry(int pindex)
+{
+// Get the number of columns and rows from the Panorama
+	int cols = panos[pindex]->getNumColumns();
+	int rows = panos[pindex]->getNumRows();
+	col = cols;
+	row = rows;
+        std::cerr << "Cols = " << col << " Row = " << row << std::endl;
+	//create the ivsphere's with texture
+	// using lsphere[pindex] assume created
+	//rsphere.push_back( new osg::Group);
+	//using rsphere[pindex];
+              
+	osg::PositionAttitudeTransform* pat= new osg::PositionAttitudeTransform;
+	osg::ref_ptr<osg::PositionAttitudeTransform>* leftrotate = new osg::ref_ptr<osg::PositionAttitudeTransform>[rows * cols];
+        std::cerr << "Build Geodes" << std::endl;
+	for (int i = 0; i < rows; i++) {
+	   for (int j = 0; j < cols; j++) {	    
+		leftrotate[j + i * cols] = new osg::PositionAttitudeTransform;
+		leftrotate[j + i * cols]->addChild(createGeode( i, j, rows, cols, panos[pindex]->getLeftImages(), 0x01));
+        std::cerr << "Add left geode " << pindex << std::endl;
+		lsphere[pindex]->addChild(leftrotate[j + i * cols].get());
+		//pat=(osg::PositionAttitudeTransform*)leftrotate[j + i * cols]->getChild();	   	          	
+		pat=(osg::PositionAttitudeTransform*)lsphere[pindex]->getChild(j + i * cols);	   
+		pat->setAttitude(panos[pindex]->getQuat());
+        std::cerr << "Add right  geode " << pindex << std::endl;
+		rsphere[pindex]->addChild( createGeode( i, j, rows, cols, panos[pindex]->getRightImages(), 0x02)); 
+			}	
+		}
+        std::cerr << "Geodes built" << std::endl;
+	
 }

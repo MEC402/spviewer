@@ -241,7 +241,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				// rotate left sphere vertically
 				case 'p':
 					// std::cout << "one\n";
-					myindex=getIndex();
+					myindex=ai->getIndex();
 					// std::cerr << "Index " << myindex << std::endl;
 					//std::cout << "myindex: " << myindex << "\n"; // put print in to see what exactly the
 					// return is from getIndex()
@@ -293,7 +293,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 
 				// rotate left sphere vertically
 				case 'P':
-					myindex=getIndex();
+					myindex=ai->getIndex();
 					myplist[myindex]->rotatedLeftSphere+=STEPSIZE;
 					degree=myplist[myindex]->rotatedLeftSphere;
 					rotate= (osg::Group*)panos->getChild(myindex);
@@ -312,7 +312,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				// load the next image
 				case 'n':
 					ai->loadNextImage();
-					myindex=getIndex();
+					myindex=ai->getIndex();
 					// rotate= (osg::Group*)panos->getChild(myindex);
 					std::cerr << "Show Next Image ..." << std::endl;
 				 
@@ -322,7 +322,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				// load the previous image
 				case 'N':
 					ai->loadPrevImage();
-					myindex=getIndex();
+					myindex=ai->getIndex();
 			
 					return true;
 					break;
@@ -344,7 +344,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				// rotate left sphere horizontally
 				case 'o':
 					// degreeVer=degreeVer+t;
-					myindex=getIndex();
+					myindex=ai->getIndex();
 					myplist[myindex]->verticalRotation-=STEPSIZE;
 					degreeVer=myplist[myindex]->verticalRotation;
 					rotate= (osg::Group*)panos->getChild(myindex);
@@ -363,7 +363,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				 
 				// rotate left sphere horizontally
 				case 'O':
-					myindex=getIndex();
+					myindex=ai->getIndex();
 					myplist[myindex]->verticalRotation+=STEPSIZE;
 					degreeVer=myplist[myindex]->verticalRotation;
 					rotate= (osg::Group*)panos->getChild(myindex);

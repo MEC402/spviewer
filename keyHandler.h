@@ -33,8 +33,8 @@ public:
              osg::Group *aroot);
 //  imageHandler(std::string d,osgViewer::Viewer *av,osgGA::CameraManipulator* cm, osg::Group* rt,osg::Group* _root, int* row,int* col, AwesomiumImage *a);
     virtual bool spHandle(const osgGA::GUIEventAdapter& ea);
-    void setIndex(int a) { myoindex = a; }
-    int getIndex() { return myoindex; } 
+//    void setIndex(int a) { myoindex = a; }
+//    int getIndex() { return myoindex; } 
     void resetView();
   
 private:

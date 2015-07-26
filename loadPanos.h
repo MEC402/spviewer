@@ -38,6 +38,7 @@ public:
   int getHeight(){return height;};
   void loadNextImage();
   void loadPrevImage();
+  void buildGeometry(int pindex);
   int getIndex() { return curpano; }
   void setIndex(int a) { curpano = a; }
   osg::Group *getGroupNode() { return rightSphere;}
