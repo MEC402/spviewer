@@ -162,7 +162,7 @@ keyHandler::keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
 	myviewer = aviewer;
 	a = b = c = x = 0.0;
 	y = 10.0; z = 0.0;
-	eyeDistance = 0.001f;
+	eyeDistance = 0.00000001f;
 	panos = (osg::Switch *)aroot;
 	col = myplist[0]->getNumColumns();
 	row = myplist[0]->getNumRows();
@@ -487,8 +487,9 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				case '1':
 			  
 					if (osg::DisplaySettings::instance()->getStereo()){
-						eyeDistance += 0.001;
+						eyeDistance += EYESEP;
 						osg::DisplaySettings::instance()->setEyeSeparation(eyeDistance);
+                                         std::cerr << "ESEP" << eyeDistance << std::endl;
 					}
 			
 					break;
@@ -497,19 +498,25 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				case '2':		
 				
 					if (osg::DisplaySettings::instance()->getStereo()){
-						eyeDistance -= 0.001;
+						eyeDistance -= EYESEP;
 						osg::DisplaySettings::instance()->setEyeSeparation(eyeDistance);
+                                         std::cerr << "ESEP" << eyeDistance << std::endl;
 					}
 				
 					break;
 				  
-				//set/unset stereo 
-				case '3':
+			//set/unset stereo 
+			case '3':
 				
-					if (osg::DisplaySettings::instance()->getStereo())
-						osg::DisplaySettings::instance()->setStereo(false);
-					else 
-						osg::DisplaySettings::instance()->setStereo(true);
+			if (osg::DisplaySettings::instance()->getStereo())
+                        {
+			osg::DisplaySettings::instance()->setStereo(false);
+                        }
+			else 
+                        {
+			  osg::DisplaySettings::instance()->setStereo(true);
+			osg::DisplaySettings::instance()->setEyeSeparation(eyeDistance);
+                        }
 				
 				break;
 				  

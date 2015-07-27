@@ -180,9 +180,9 @@ void buildViewerScene(osgViewer::Viewer *aviewer, osg::Group *Groot, osgGA::Came
 	// create a listener and event handler
     spKeys* mykeyui = new spKeys();
     Gmykeyui = mykeyui;
-	eyeSeparation* es=new eyeSeparation(aviewer);
+	//eyeSeparation* es=new eyeSeparation(aviewer);
 	// ih->setVector(rotateDegree);
-    mykeyui->addListener(es);
+    //mykeyui->addListener(es);
     aviewer->addEventHandler(mykeyui);
 	//aviewer->addEventHandler(new osgViewer::ScreenCaptureHandler(new osgViewer::ScreenCaptureHandler::WriteToFile("filename", "jpg")));
 	std::cerr << "Handlers Set!" << std::endl;
@@ -282,7 +282,7 @@ osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getW
             traits->height = height;
             traits->windowDecoration = false;
             traits->doubleBuffer = true;
-            traits->quadBufferStereo = true;
+            //traits->quadBufferStereo = true;
             traits->sharedContext = 0;
             traits->overrideRedirect = true;
 

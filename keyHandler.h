@@ -20,6 +20,7 @@
 /*#include "sys/sysinfo.h"*/
 
 #define STEPSIZE 0.00128
+#define EYESEP 0.0010
 
 class keyHandler : public eventListener {
 
