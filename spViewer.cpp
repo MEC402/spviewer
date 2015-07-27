@@ -282,6 +282,7 @@ osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getW
             traits->height = height;
             traits->windowDecoration = false;
             traits->doubleBuffer = true;
+            traits->quadBufferStereo = true;
             traits->sharedContext = 0;
             traits->overrideRedirect = true;
 
