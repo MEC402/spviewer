@@ -19,6 +19,8 @@ public:
 	std::string getRightDir(){ return right_dir; }
 	std::string getGeom(){ return geom; }
 	osg::ref_ptr<osg::Node> getMyGeometry(){ return mygeometry; }
+	double getCameraRotation(){ return cameraRotation;  }
+	void setCameraRotation(double horRotation) { cameraRotation = horRotation; }
 	
 	// TODO: Implement function.	
 	std::string getQuatToString(std::string q){ return q; }
@@ -36,6 +38,7 @@ public:
 	std::string geom;
 	osg::ref_ptr<osg::Node> mygeometry;
 	osg::Quat myquat;
+	double cameraRotation;
 	double rotatedLeftSphere;  // unused
 	double verticalRotation; // unused
 	Tiles* left;
