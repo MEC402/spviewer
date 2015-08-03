@@ -109,7 +109,6 @@ void keyHandler::rotateCamera(char direction) {
 	osg::Vec3 *avec;  
 	osg::Quat q;
 
-  
 	switch(direction){
 		case 'u':
 			ver += 1;
@@ -154,6 +153,7 @@ keyHandler::keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
                        osgGA::CameraManipulator *acm,
                        osgViewer::Viewer *aviewer,
                        osg::Group *aroot) {
+
 	myplist = plist;
 	std::cerr << "Panos Size == " << myplist.size() << std::endl;
 	std::cerr << "Panos Columns == " << myplist[0]->getNumColumns() << std::endl;
@@ -174,10 +174,12 @@ keyHandler::keyHandler(std::vector<Panorama *> plist, loadPanos *alp,
 	ver = 0.0;
 	hor = 0.0;
 	myAxis=osg::Vec3d(10.0,0.0,0.0);
+	
 }
 
 
 bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
+	Panorama* setRotation;
 	switch(ea.getEventType()) {
 		
 		case osgGA::GUIEventAdapter::KEYDOWN:
@@ -240,53 +242,26 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				
 				// rotate left sphere vertically
 				case 'p':
-					// std::cout << "one\n";
 					myindex=ai->getIndex();
-					// std::cerr << "Index " << myindex << std::endl;
-					//std::cout << "myindex: " << myindex << "\n"; // put print in to see what exactly the
-					// return is from getIndex()
-					// std::cout << "two\n";
-					// TODO: CODE IS BROKEN HERE!
 					myplist[myindex]->rotatedLeftSphere-=STEPSIZE;
-					// std::cerr << "Index 1 " << myindex << std::endl;
-					// std::cout << "three\n";
 					degree=myplist[myindex]->rotatedLeftSphere;
-					// std::cerr << "Index 2 " << myindex << std::endl;
-					// std::cout << "four\n";
 					rotate= (osg::Group*)panos->getChild(myindex);
-					// std::cout << "five\n";
-					// std::cerr << "Index 3" << row << " " << col << std::endl;
 					
 					for (int i=0;i<(row)*(col); i++) {			
-						// std::cout << "row: " << row << " ;col: " << col << "\n";
-						// std::cerr << "Pat 3" << myindex << std::endl;
-						
-						pat=(osg::PositionAttitudeTransform*)rotate->getChild(i);
-						// std::cout << "six\n";
-						// std::cerr << "Pat 4" << pat << std::endl;
-						
-						if (pat != NULL) {
-							// std::cout << "seven\n";
-							osg::Quat x=pat->getAttitude();
-							// std::cout << "eight\n";
-							x=x*osg::Quat(-STEPSIZE, osg::Vec3d(0.0f,0.0f,1.0f));
-							// std::cout << "nine\n";
-						   pat->setAttitude(x);
-							// std::cout << "ten\n";
 
+						pat=(osg::PositionAttitudeTransform*)rotate->getChild(i);
+
+						if (pat != NULL) {
+							osg::Quat x=pat->getAttitude();
+							x=x*osg::Quat(-STEPSIZE, osg::Vec3d(0.0f,0.0f,1.0f));
+						   pat->setAttitude(x);
 						} else {
 							std::cerr << "Pat == NULL " << pat << std::endl;
-							// std::cout << "eleven\n";
 						}
 					}
-			
-					// std::cerr << "Index 4" << myindex << std::endl;
-					if (pat != NULL)
-						//std::cout << pat << "\n";
 
-					// std::cout << "twelve\n";
+					if (pat != NULL)
 					myplist[myindex]->myquat=pat->getAttitude();
-					// std::cout << "thirteen\n";
 				  
 					return true;
 					break;
@@ -311,16 +286,21 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 				  
 				// load the next image
 				case 'n':
+					resetView();
 					ai->loadNextImage();
 					myindex=ai->getIndex();
+					resetViewWithHome();
 					std::cerr << "Show Next Image ..." << std::endl;
 					return true;
 					break;
 
 				// load the previous image
 				case 'N':
+					resetView();
 					ai->loadPrevImage();
 					myindex=ai->getIndex();
+					resetViewWithHome();
+
 					return true;
 					break;
 				
@@ -337,7 +317,20 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 					return true;
 					break;
 					
+				//write home coordinates to XML file
+				case 'H':
+					setRotation = myplist[ai->getIndex()];
+					setRotation->setCameraRotation(hor);
+					std::cerr << "Set Rotation: " << setRotation->getCameraRotation();
+					break;
+
+				case 'J':
+					setRotation = myplist[ai->getIndex()];
+					setRotation->getCameraRotation();
 					
+					resetView();
+					resetViewWithHome();
+
 				// rotate left sphere horizontally
 				case 'o':
 					// degreeVer=degreeVer+t;
@@ -451,7 +444,6 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 					break;
 				 
 				case 'y':
-
 					if(myviewer->getCamera()->getNodeMask() == 0x0)
 						myviewer->getCamera()->setNodeMask(0xffffffff);
 					
@@ -480,7 +472,7 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 					break;
 				
 				case 'e':
-                                    resetView();
+                    resetView();
 				    break;
 
 				//increase eye Separation
@@ -581,26 +573,45 @@ bool keyHandler::spHandle(const osgGA::GUIEventAdapter& ea) {
 
 void keyHandler::resetView()
 {
-// reset the zoom
-aspect=(1080.0/1920.0);
-fovy=34.0;
-myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
-// reset the camera position view
-rotateCamera('u');
-rotated =osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, 
-osg::Vec3d(0,0,1)) * osg::Vec3(0, 10, 0.0);
-osg::Quat q = osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, osg::Vec3d(0,0,1));
-myAxis =q * osg::Vec3d(10,0.0,0.0) ;   
-hor = 0.0;
-ver = 0.0;
-x=0.0;
-y=10.0;
-z=0.0;
-a=0.0;
-b=0.0;
-c=0.0;
-cm->setHomePosition(osg::Vec3(0,0,0),osg::Vec3(0,10,0),osg::Vec3(0.0f,0.0f,-1.0f),false);
-myviewer->home();
+
+	// reset the zoom
+	aspect=(1080.0/1920.0);
+	fovy=34.0;
+	myviewer->getCamera()->setProjectionMatrixAsPerspective(fovy, aspect, 1.0f,10000.0f);
+	// reset the camera position view
+	rotateCamera('u');
+	rotated =osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, 
+	osg::Vec3d(0,0,1)) * osg::Vec3(0, 10, 0.0);
+	osg::Quat q = osg::Quat(0.0, osg::Vec3d(1,0,0), 0.0, osg::Vec3d(0,1,0), 0.0, osg::Vec3d(0,0,1));
+	myAxis =q * osg::Vec3d(10,0.0,0.0) ; 
+	hor = 0.0;
+	ver = 0.0;
+	x=0.0;
+	y=10.0;
+	z=0.0;
+	a=0.0;
+	b=0.0;
+	c=0.0;
+	cm->setHomePosition(osg::Vec3(0,0,0),osg::Vec3(0,10,0),osg::Vec3(0.0f,0.0f,-1.0f),false);
+	myviewer->home();
+}
+
+void keyHandler::resetViewWithHome()
+{
+	Panorama* setRotation;
+	double ahor;
+	osg::Vec3 *avec;
+	osg::Quat q;
+
+	setRotation = myplist[ai->getIndex()];
+	ahor = setRotation->getCameraRotation();
+	q = osg::Quat(((ver / 180.0) * M_PI), osg::Vec3d(1, 0, 0), 0.0, osg::Vec3d(0, 1, 0), ((ahor / 180.0) * M_PI), osg::Vec3d(0, 0, 1));
+	hor = ahor;
+	avec = new osg::Vec3(0, 10, 0.0);
+	rotated = q * *avec + osg::Vec3d(a, b, c);
+	myAxis = q * osg::Vec3d(10, 0.0, 0.0);
+	cm->setHomePosition(osg::Vec3d(a, b, c), rotated, osg::Vec3d(0, 0, -1), false);
+	myviewer->home();
 }
 
 

@@ -17,6 +17,7 @@
 #include "eventListener.h"
 #include <osg/Camera>
 #include "sys/types.h"
+
 /*#include "sys/sysinfo.h"*/
 
 #define STEPSIZE 0.00128
@@ -37,6 +38,7 @@ public:
 //    void setIndex(int a) { myoindex = a; }
 //    int getIndex() { return myoindex; } 
     void resetView();
+	void resetViewWithHome();
   
 private:
     std::string filename;
@@ -49,7 +51,7 @@ private:
     double vm, rss;
     osgViewer::Viewer *myviewer;
     osg::Group* root;
-    int hor, ver;
+    double hor, ver;
     double tangent;
     float zupdate, xupdate;
     double prevang,aspect, verang, preverang;
@@ -75,6 +77,7 @@ private:
 	osg::Switch * objNobj;
 	// for objNode off/on
 	bool isOn = true;
+	
 };
 
 #endif

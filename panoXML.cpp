@@ -3,8 +3,10 @@
  *
  */
 
-#include <mxml.h>
+#include "keyHandler.h"
 #include "panoXML.h"
+#include "loadPanos.h"
+#include <mxml.h>
 #include <osg/Quat>
 
 std::vector<Panorama *> parsePanos(mxml_node_t *atree) {
@@ -40,6 +42,7 @@ Panorama * parseSinglePano(mxml_node_t *anode)
     const char * vertical;
     const char * quat;
     const char * geometry;
+	const char * home;
     bool leftPano = false;
     bool rightPano = false;
  
@@ -51,6 +54,8 @@ Panorama * parseSinglePano(mxml_node_t *anode)
     vertical = mxmlElementGetAttr(anode,"vertical");
     quat = mxmlElementGetAttr(anode,"quat");
     geometry = mxmlElementGetAttr(anode, "geometry");
+	home = mxmlElementGetAttr(anode, "home");
+
  
     if (left) leftPano = true;
     if (right) rightPano = true;
@@ -61,6 +66,8 @@ Panorama * parseSinglePano(mxml_node_t *anode)
     std::string sright;
     std::string squat;
 	std::string sgeom;
+	std::string shome;
+	
  
     if (id != NULL) sid = id;
 	else {
@@ -91,16 +98,23 @@ Panorama * parseSinglePano(mxml_node_t *anode)
    if(quat != NULL) squat = quat;
    else squat = "0.0;0.0;0.0;0.1";
 
+   if (home != NULL) shome = home;
+   else shome = "0.0";
+
+   double shomeDouble = stod(shome);
+
    if (geometry != NULL) sgeom = geometry; 
    else sgeom = "";
 
    Panorama *res = new Panorama(sid,name,sleft,sright,squat,sgeom);
 
+   res->setCameraRotation(shomeDouble);
+
    return res;
 }
 
 //TODO: Add method to panorama called get quat to string
-void writeToFile( std::string fileName, std::vector<Panorama*> plist )
+void writeToFile(const std::string &fileName, std::vector<Panorama*> plist)
 {
 
 	mxml_node_t *xml; //parent node
@@ -111,10 +125,10 @@ void writeToFile( std::string fileName, std::vector<Panorama*> plist )
 
 	xml = mxmlNewXML("panoTest");
 	data = mxmlNewElement(xml, "panoramas");
-	
+
 	for (int i = 0; i < plist.size(); i++) 
 	{
-		Panorama* ap = plist[i];
+		Panorama* ap{ plist[i] };
 		q.str("");
 		q << ap->getQuat().x() << ";";
 		q << ap->getQuat().y() << ";";
@@ -164,7 +178,14 @@ void writeToFile( std::string fileName, std::vector<Panorama*> plist )
 		else{
 			return;
 		}
+		if ((ap->getCameraRotation() != NULL)){
+			mxmlElementSetAttr(pano, "home", std::to_string(ap->getCameraRotation()).c_str());
+		}
+		else{
+			mxmlElementSetAttr(pano, "home", "0.0");
+		}
 	}
+	
 		//filename.c_str() to replace panoTest.xml in fp
 		fp = fopen("panoTest.xml", "w"); // parameters: 
 		mxmlSaveFile(xml, fp, MXML_NO_CALLBACK);//(xml node tree to save, file to write to, whitespace callback)

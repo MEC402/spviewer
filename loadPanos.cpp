@@ -154,12 +154,12 @@ void loadPanos::buildGeometry(int pindex)
 	   for (int j = 0; j < cols; j++) {	    
 		leftrotate[j + i * cols] = new osg::PositionAttitudeTransform;
 		leftrotate[j + i * cols]->addChild(createGeode( i, j, rows, cols, panos[pindex]->getLeftImages(), 0x01));
-        std::cerr << "Add left geode " << pindex << std::endl;
+        //std::cerr << "Add left geode " << pindex << std::endl;
 		lsphere[pindex]->addChild(leftrotate[j + i * cols].get());
 		//pat=(osg::PositionAttitudeTransform*)leftrotate[j + i * cols]->getChild();	   	          	
 		pat=(osg::PositionAttitudeTransform*)lsphere[pindex]->getChild(j + i * cols);	   
 		pat->setAttitude(panos[pindex]->getQuat());
-        std::cerr << "Add right  geode " << pindex << std::endl;
+        //std::cerr << "Add right  geode " << pindex << std::endl;
 		rsphere[pindex]->addChild( createGeode( i, j, rows, cols, panos[pindex]->getRightImages(), 0x02)); 
 			}	
 		}

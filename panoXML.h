@@ -7,7 +7,8 @@
 
 std::vector<Panorama*>  parsePanos(mxml_node_t *atree);
 Panorama *parseSinglePano(mxml_node_t *anode);
-void writeToFile(std::string fileName, std::vector<Panorama*> plist);
+//void writeToFile(std::string fileName, std::vector<Panorama*> plist);
+void writeToFile(const std::string &fileName, std::vector<Panorama*> plist);
 //void formatPanoXML(std::string fileName);
 
 #endif
